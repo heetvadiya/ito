@@ -30,6 +30,31 @@ export class ItoSettingTab extends PluginSettingTab {
           });
       });
 
+    // ── Test API Key ───────────────────────────────────────────────────────
+    new Setting(containerEl)
+      .setName('Test API key')
+      .setDesc('Send a quick test embedding to verify your key and model access.')
+      .addButton(btn => btn
+        .setButtonText('Test connection')
+        .onClick(async () => {
+          if (!this.plugin.settings.geminiApiKey) {
+            new Notice('Ito: paste an API key first.');
+            return;
+          }
+          btn.setButtonText('Testing…');
+          btn.setDisabled(true);
+          try {
+            await this.plugin.embedder.embed({ type: 'text', content: 'test' });
+            new Notice('Ito: API key works. Model is accessible.');
+          } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : String(err);
+            new Notice(`Ito: test failed — ${msg}`, 8000);
+          } finally {
+            btn.setButtonText('Test connection');
+            btn.setDisabled(false);
+          }
+        }));
+
     // ── Indexed Folders ────────────────────────────────────────────────────
     new Setting(containerEl)
       .setName('Indexed folders')

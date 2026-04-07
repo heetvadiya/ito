@@ -230,6 +230,8 @@ export class ItoIndexer {
       this.retryPaths.add(filePath);
       return;
     }
+    const msg = err instanceof Error ? err.message : String(err);
+    new Notice(`Ito: error indexing ${filePath.split('/').pop()} — ${msg}`);
     console.error(`Ito: unexpected error indexing ${filePath}`, err);
   }
 
