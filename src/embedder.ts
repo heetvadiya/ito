@@ -8,7 +8,7 @@ import {
   ItoQuotaError,
 } from './types';
 
-const MODEL_NAME = 'gemini-embedding-exp-03-07';
+const MODEL_NAME = 'gemini-embedding-001';
 
 export class ItoEmbedder {
   private client: GoogleGenerativeAI;
