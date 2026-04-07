@@ -1,39 +1,96 @@
-/* ── Ito — Art of Ma ─────────────────────────────────────────────────────────
-   Warm cream. Serif titles. Editorial cards. No borders. No gradients.
+/* ── Ito — The Digital Curator ───────────────────────────────────────────────
+   Parchment-warm light. Obsidian-ink dark. No borders. No harsh shadows.
+   Hierarchy through tonal layering, not lines.
    ─────────────────────────────────────────────────────────────────────────── */
 
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ── Light mode tokens ───────────────────────────────────────────────────── */
+
+.theme-light {
+  --ito-bg:           #f9f9f6;
+  --ito-card:         #ffffff;
+  --ito-card-hover:   #fdfdfb;
+  --ito-surface-high: #e5e9e4;
+  --ito-highest:      #d8ddd7;
+
+  --ito-ink:          #2e3430;
+  --ito-ink-2:        #5a615c;
+  --ito-ink-3:        #8e9590;
+
+  --ito-primary:      #635e51;
+  --ito-primary-cont: #e9e2d2;
+  --ito-on-primary:   #ffffff;
+
+  --ito-green:        #4a6b42;
+  --ito-green-bg:     #dce8d9;
+  --ito-green-dark:   #243d1f;
+  --ito-clay:         #7a5c3e;
+  --ito-clay-bg:      #edddd0;
+  --ito-slate:        #3d4a4e;
+  --ito-slate-bg:     #d8e2e6;
+  --ito-violet:       #4a3d5e;
+  --ito-violet-bg:    #e0d8ec;
+
+  --ito-shadow-sm: 0 1px 4px rgba(46,52,48,0.06), 0 1px 10px rgba(46,52,48,0.04);
+  --ito-shadow-md: 0 2px 16px rgba(46,52,48,0.08), 0 1px 6px rgba(46,52,48,0.05);
+  --ito-shadow-lg: 0 8px 48px rgba(46,52,48,0.08), 0 2px 12px rgba(46,52,48,0.05);
+
+  --ito-glass-bg:    rgba(255,255,255,0.72);
+  --ito-glass-blur:  blur(16px);
+
+  --ito-score-color: #4a6b42;
+  --ito-slider-fill: #4a6b42;
+}
+
+/* ── Dark mode tokens ────────────────────────────────────────────────────── */
+
+.theme-dark {
+  --ito-bg:           #191815;
+  --ito-card:         #222019;
+  --ito-card-hover:   #2a2820;
+  --ito-surface-high: #2f2d26;
+  --ito-highest:      #3a3830;
+
+  --ito-ink:          #e4e1d8;
+  --ito-ink-2:        #a09d93;
+  --ito-ink-3:        #65635b;
+
+  --ito-primary:      #b0a990;
+  --ito-primary-cont: #3a342a;
+  --ito-on-primary:   #191815;
+
+  --ito-green:        #89ab82;
+  --ito-green-bg:     #1e3019;
+  --ito-green-dark:   #c4dbbf;
+  --ito-clay:         #c4956a;
+  --ito-clay-bg:      #2e1f10;
+  --ito-slate:        #8aaab0;
+  --ito-slate-bg:     #142028;
+  --ito-violet:       #a090c0;
+  --ito-violet-bg:    #1e1628;
+
+  --ito-shadow-sm: 0 1px 4px rgba(0,0,0,0.20), 0 1px 10px rgba(0,0,0,0.16);
+  --ito-shadow-md: 0 2px 16px rgba(0,0,0,0.28), 0 1px 6px rgba(0,0,0,0.20);
+  --ito-shadow-lg: 0 8px 48px rgba(0,0,0,0.36), 0 2px 12px rgba(0,0,0,0.24);
+
+  --ito-glass-bg:    rgba(34,32,25,0.78);
+  --ito-glass-blur:  blur(16px);
+
+  --ito-score-color: #89ab82;
+  --ito-slider-fill: #89ab82;
+}
+
+/* ── Shared ──────────────────────────────────────────────────────────────── */
+
 .theme-light, .theme-dark {
-  --ito-bg:          #f6f4e8;
-  --ito-card:        #faf9f2;
-  --ito-card-hover:  #fefdf6;
-  --ito-highest:     #ede9d8;
-
-  --ito-ink:         #38382f;
-  --ito-ink-2:       #6b6a5c;
-  --ito-ink-3:       #9e9c8c;
-
-  --ito-green:       #5d6758;
-  --ito-green-bg:    #dce4d8;
-  --ito-green-dark:  #2a3d26;
-  --ito-clay:        #8b6e4e;
-  --ito-clay-bg:     #e8ddd0;
-  --ito-slate-bg:    #dee3e6;
-  --ito-slate-dark:  #2e3828;
-  --ito-purple-bg:   #ddd8e4;
-  --ito-purple-dark: #2e2840;
-
-  --ito-shadow-sm:  0 1px 3px rgba(56,56,47,0.06), 0 1px 8px rgba(56,56,47,0.04);
-  --ito-shadow-md:  0 2px 12px rgba(56,56,47,0.08), 0 1px 4px rgba(56,56,47,0.05);
-  --ito-shadow-lg:  0 4px 24px rgba(56,56,47,0.10), 0 2px 8px rgba(56,56,47,0.06);
-
   --ito-r:       10px;
   --ito-r-sm:    6px;
   --ito-r-pill:  999px;
   --ito-ease:    cubic-bezier(0.4, 0, 0.2, 1);
   --ito-t:       160ms;
-
-  --ito-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
-  --ito-sans:  'Manrope', 'Inter', system-ui, sans-serif;
+  --ito-serif:   'Newsreader', Georgia, 'Times New Roman', serif;
+  --ito-sans:    'Inter', system-ui, sans-serif;
 }
 
 /* ── Panel shell ─────────────────────────────────────────────────────────── */
@@ -55,10 +112,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 16px 12px;
+  padding: 18px 16px 10px;
   position: sticky;
   top: 0;
   background-color: var(--ito-bg);
+  backdrop-filter: var(--ito-glass-blur);
+  -webkit-backdrop-filter: var(--ito-glass-blur);
   z-index: 10;
 }
 
@@ -70,14 +129,16 @@
 
 .ito-wordmark {
   font-family: var(--ito-serif);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0.08em;
+  font-style: italic;
+  letter-spacing: 0.04em;
   color: var(--ito-ink);
 }
 
 .ito-count {
   font-size: 11px;
+  font-weight: 500;
   color: var(--ito-ink-3);
   letter-spacing: 0.02em;
 }
@@ -86,8 +147,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   background: transparent;
   border: none;
@@ -102,29 +163,33 @@
   color: var(--ito-ink);
 }
 
-/* ── Threshold slider ────────────────────────────────────────────────────── */
+/* ── Threshold controls ──────────────────────────────────────────────────── */
 
 .ito-slider-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px 6px;
+  padding: 0 16px 5px;
 }
 
 .ito-slider-label {
+  font-family: var(--ito-sans);
   font-size: 11px;
+  font-weight: 500;
   color: var(--ito-ink-3);
+  letter-spacing: 0.02em;
 }
 
 .ito-slider-value {
+  font-family: var(--ito-sans);
   font-size: 11px;
   font-weight: 700;
-  color: var(--ito-green);
-  letter-spacing: 0.03em;
+  color: var(--ito-score-color);
+  letter-spacing: 0.04em;
 }
 
 .ito-slider-wrap {
-  padding: 0 16px 14px;
+  padding: 0 16px 16px;
 }
 
 .ito-slider {
@@ -140,23 +205,31 @@
 }
 .ito-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: var(--ito-green);
+  background: var(--ito-slider-fill);
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(56,56,47,0.25);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.22);
   transition: transform var(--ito-t) var(--ito-ease);
 }
 .ito-slider::-webkit-slider-thumb:hover { transform: scale(1.3); }
+.ito-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ito-slider-fill);
+  border: none;
+  cursor: pointer;
+}
 
 /* ── Tiles list ──────────────────────────────────────────────────────────── */
 
 .ito-tiles {
-  padding: 2px 10px 24px;
+  padding: 0 10px 28px;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
 }
 
 /* ── Tile card ───────────────────────────────────────────────────────────── */
@@ -164,99 +237,109 @@
 .ito-tile {
   background: var(--ito-card);
   border-radius: var(--ito-r);
-  padding: 12px 14px 12px;
+  padding: 14px 15px 13px;
   box-shadow: var(--ito-shadow-sm);
   cursor: pointer;
+  outline: none;
+  user-select: none;
   transition:
     background var(--ito-t) var(--ito-ease),
     box-shadow var(--ito-t) var(--ito-ease),
     transform var(--ito-t) var(--ito-ease);
-  outline: none;
-  user-select: none;
 }
-
 .ito-tile:hover {
   background: var(--ito-card-hover);
   box-shadow: var(--ito-shadow-md);
   transform: translateY(-1px);
 }
-
 .ito-tile:active {
   transform: translateY(0);
   box-shadow: var(--ito-shadow-sm);
 }
+/* Keyboard focus — visible ring without harsh outline */
+.ito-tile:focus-visible {
+  box-shadow: var(--ito-shadow-md), 0 0 0 2px var(--ito-primary);
+}
 
-/* ── Meta row: badge + score ─────────────────────────────────────────────── */
+/* ── Meta row ────────────────────────────────────────────────────────────── */
 
 .ito-tile-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 }
 
 /* ── Modality badges ─────────────────────────────────────────────────────── */
 
 .ito-badge {
-  font-size: 9.5px;
+  font-family: var(--ito-sans);
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: var(--ito-r-pill);
   line-height: 1.6;
 }
 
 .ito-badge--text  { background: var(--ito-highest);    color: var(--ito-ink-2); }
 .ito-badge--image { background: var(--ito-clay-bg);    color: var(--ito-clay); }
-.ito-badge--pdf   { background: var(--ito-slate-bg);   color: var(--ito-slate-dark); }
+.ito-badge--pdf   { background: var(--ito-slate-bg);   color: var(--ito-slate); }
 .ito-badge--audio { background: var(--ito-green-bg);   color: var(--ito-green-dark); }
-.ito-badge--video { background: var(--ito-purple-bg);  color: var(--ito-purple-dark); }
+.ito-badge--video { background: var(--ito-violet-bg);  color: var(--ito-violet); }
 
 .ito-score {
+  font-family: var(--ito-sans);
   font-size: 11px;
   font-weight: 700;
-  color: var(--ito-green);
-  letter-spacing: 0.03em;
-  opacity: 0.9;
+  color: var(--ito-score-color);
+  letter-spacing: 0.04em;
 }
 
 /* ── Tile title ──────────────────────────────────────────────────────────── */
 
-/* Plain <p> — no button, no heading, no black bar */
 .ito-tile-title {
   font-family: var(--ito-serif);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--ito-ink);
   line-height: 1.4;
-  margin: 0 0 8px;
+  margin: 0 0 9px;
   padding: 0;
   background: none;
   border: none;
   box-shadow: none;
+  /* Subtle color shift on tile hover, inherited from parent */
+  transition: color var(--ito-t) var(--ito-ease);
+}
+
+.ito-tile:hover .ito-tile-title {
+  color: var(--ito-primary);
 }
 
 /* ── Matched content snippet ─────────────────────────────────────────────── */
 
 .ito-tile-snippet {
-  margin-bottom: 10px;
+  margin-bottom: 11px;
 }
 
 .ito-snippet-label {
   display: block;
+  font-family: var(--ito-sans);
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ito-ink-3);
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
 .ito-snippet-text {
+  font-family: var(--ito-sans);
   font-size: 11.5px;
   color: var(--ito-ink-2);
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -269,10 +352,10 @@
 .ito-tile-footer {
   display: flex;
   justify-content: flex-end;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
-/* ── Link button ─────────────────────────────────────────────────────────── */
+/* ── Add link button ─────────────────────────────────────────────────────── */
 
 .ito-btn-link {
   font-family: var(--ito-sans);
@@ -283,10 +366,12 @@
   background: var(--ito-highest);
   border: none;
   border-radius: var(--ito-r-sm);
-  padding: 4px 10px;
+  padding: 5px 11px;
   cursor: pointer;
   box-shadow: none;
-  transition: background var(--ito-t) var(--ito-ease), color var(--ito-t) var(--ito-ease);
+  transition:
+    background var(--ito-t) var(--ito-ease),
+    color var(--ito-t) var(--ito-ease);
   white-space: nowrap;
 }
 .ito-btn-link:hover {
@@ -297,23 +382,24 @@
   background: var(--ito-green-bg);
   color: var(--ito-green-dark);
   cursor: default;
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
-/* ── State / empty messages ──────────────────────────────────────────────── */
+/* ── State / empty ───────────────────────────────────────────────────────── */
 
 .ito-state-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 48px 24px;
 }
 
 .ito-state,
 .ito-empty {
+  font-family: var(--ito-sans);
   font-size: 12px;
   color: var(--ito-ink-3);
-  line-height: 1.7;
+  line-height: 1.75;
   text-align: center;
   margin: 0;
 }
@@ -324,8 +410,9 @@
 
 .ito-modal-title {
   font-family: var(--ito-serif);
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 400;
+  font-style: italic;
   letter-spacing: 0.02em;
   color: var(--ito-ink);
   margin-bottom: 20px;
@@ -339,7 +426,7 @@
   font-family: var(--ito-serif);
   font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
   color: var(--ito-ink-3);
   margin-top: 2rem;
