@@ -196,6 +196,8 @@ export class ItoIndexer {
 
       try {
         await this.indexFile(file);
+        const name = file.path.split('/').pop() ?? file.path;
+        new Notice(`Ito: indexed ${name}`, 2500);
         const delay = modality?.rateLimitClass() === 'heavy'
           ? RATE_LIMIT_MS_HEAVY
           : RATE_LIMIT_MS_LIGHT;
