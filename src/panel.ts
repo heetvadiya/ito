@@ -10,10 +10,8 @@ class RelatedCollection {
   append(wikiLink: string): string {
     const link = `[[${wikiLink}]]`;
     const relatedIdx = this.content.indexOf('\n## Related');
-
     if (relatedIdx !== -1) {
-      // Find where the Related section ends (next ## heading or EOF)
-      const afterHeading = this.content.slice(relatedIdx + 1); // skip the leading \n
+      const afterHeading = this.content.slice(relatedIdx + 1);
       const nextHeading = afterHeading.slice('## Related'.length).search(/\n## /);
       if (nextHeading !== -1) {
         const insertAt = relatedIdx + 1 + '## Related'.length + nextHeading;
@@ -21,7 +19,6 @@ class RelatedCollection {
       }
       return this.content.trimEnd() + `\n${link}\n`;
     }
-
     return this.content.trimEnd() + `\n\n## Related\n\n${link}\n`;
   }
 }
@@ -61,11 +58,11 @@ export class ItoPanel extends ItemView {
 
   async refresh(file: TFile): Promise<void> {
     if (!this.plugin.settings.geminiApiKey) {
-      this.renderState('Add your Gemini API key in settings to get started.');
+      this.renderEmpty('Add your Gemini API key in settings to get started.');
       return;
     }
 
-    this.renderState('Finding threads…');
+    this.renderEmpty('Finding threads…');
 
     const allEmbeddings = this.plugin.store.getAllEmbeddings();
     const origin = allEmbeddings
@@ -91,13 +88,14 @@ export class ItoPanel extends ItemView {
   private renderResults(neighbors: Neighbor[], threshold: number): void {
     this.panelContent.empty();
 
-    // ── Header ──────────────────────────────────────────────────────────
+    // ── Header ───────────────────────────────────────────────────────────
     const header = this.panelContent.createDiv('ito-header');
-    header.createEl('span', { text: 'Related', cls: 'ito-header-title' });
+    const left = header.createDiv('ito-header-left');
+    left.createEl('span', { text: 'Ito', cls: 'ito-wordmark' });
+    left.createEl('span', { text: `${neighbors.length} related`, cls: 'ito-count' });
 
-    const actions = header.createDiv('ito-header-actions');
-    const refreshBtn = actions.createEl('button', { cls: 'ito-btn-icon', attr: { 'aria-label': 'Refresh' } });
-    refreshBtn.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`;
+    const refreshBtn = header.createEl('button', { cls: 'ito-btn-icon', attr: { 'aria-label': 'Refresh' } });
+    refreshBtn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>`;
     refreshBtn.addEventListener('click', () => {
       const file = this.app.workspace.getActiveFile();
       if (file) this.refresh(file);
@@ -105,22 +103,25 @@ export class ItoPanel extends ItemView {
 
     // ── Threshold ────────────────────────────────────────────────────────
     const sliderRow = this.panelContent.createDiv('ito-slider-row');
-    const sliderLabel = sliderRow.createEl('span', { cls: 'ito-slider-label' });
-    sliderLabel.innerHTML = `Match strength <strong>${Math.round(threshold * 100)}%</strong>`;
+    const labelLeft = sliderRow.createEl('span', { text: 'Match strength', cls: 'ito-slider-label' });
+    const labelRight = sliderRow.createEl('span', {
+      text: `${Math.round(threshold * 100)}%`,
+      cls: 'ito-slider-value',
+    });
 
-    const slider = sliderRow.createEl('input', { cls: 'ito-slider' }) as HTMLInputElement;
+    const sliderWrap = this.panelContent.createDiv('ito-slider-wrap');
+    const slider = sliderWrap.createEl('input', { cls: 'ito-slider' }) as HTMLInputElement;
     slider.type = 'range';
     slider.min = '50';
     slider.max = '100';
     slider.step = '1';
     slider.value = String(Math.round(threshold * 100));
     slider.addEventListener('input', () => {
-      const t = Number(slider.value) / 100;
-      sliderLabel.innerHTML = `Match strength <strong>${slider.value}%</strong>`;
-      this.renderTiles(neighbors.filter(n => n.similarity >= t));
+      labelRight.setText(`${slider.value}%`);
+      this.renderTiles(this.cachedNeighbors.filter(n => n.similarity >= Number(slider.value) / 100));
     });
 
-    // ── Tiles container ──────────────────────────────────────────────────
+    // ── Tiles ────────────────────────────────────────────────────────────
     this.panelContent.createDiv({ cls: 'ito-tiles', attr: { id: 'ito-tiles' } });
     this.renderTiles(neighbors.filter(n => n.similarity >= threshold));
   }
@@ -131,48 +132,50 @@ export class ItoPanel extends ItemView {
     container.empty();
 
     if (neighbors.length === 0) {
-      container.createEl('p', {
-        text: 'No matches at this threshold. Try sliding lower.',
-        cls: 'ito-empty',
-      });
+      container.createEl('p', { text: 'No matches at this threshold. Try sliding lower.', cls: 'ito-empty' });
       return;
     }
 
-    for (const neighbor of neighbors) {
-      container.appendChild(this.buildTile(neighbor));
-    }
+    for (const n of neighbors) container.appendChild(this.buildTile(n));
   }
 
   private buildTile(neighbor: Neighbor): HTMLElement {
-    const tile = createDiv('ito-tile');
-
-    // ── Top row: title + similarity ──────────────────────────────────────
-    const top = tile.createDiv('ito-tile-top');
     const name = neighbor.filePath.split('/').pop()?.replace(/\.[^.]+$/, '') ?? neighbor.filePath;
-    const titleEl = top.createEl('button', { text: name, cls: 'ito-tile-title' });
-    titleEl.addEventListener('click', () => {
+
+    // Entire tile is clickable — opens the file
+    const tile = createDiv('ito-tile');
+    tile.setAttribute('role', 'button');
+    tile.setAttribute('tabindex', '0');
+    tile.addEventListener('click', (e) => {
+      // Don't navigate if user clicked the link button
+      if ((e.target as HTMLElement).closest('.ito-btn-link')) return;
       this.app.workspace.openLinkText(neighbor.filePath, '', false);
     });
-    top.createEl('span', {
-      text: `${Math.round(neighbor.similarity * 100)}%`,
-      cls: 'ito-tile-score',
+    tile.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') this.app.workspace.openLinkText(neighbor.filePath, '', false);
     });
 
-    // ── Matched content snippet ──────────────────────────────────────────
+    // ── Category row: modality badge + score ─────────────────────────────
+    const meta = tile.createDiv('ito-tile-meta');
+    meta.createEl('span', {
+      text: this.modalityLabel(neighbor.modality),
+      cls: `ito-badge ito-badge--${neighbor.modality}`,
+    });
+    meta.createEl('span', { text: `${Math.round(neighbor.similarity * 100)}%`, cls: 'ito-score' });
+
+    // ── Title ─────────────────────────────────────────────────────────────
+    tile.createEl('p', { text: name, cls: 'ito-tile-title' });
+
+    // ── Matched content snippet ───────────────────────────────────────────
     if (neighbor.summary) {
       const snippet = tile.createDiv('ito-tile-snippet');
       snippet.createEl('span', { text: 'matched content', cls: 'ito-snippet-label' });
       snippet.createEl('p', { text: neighbor.summary, cls: 'ito-snippet-text' });
     }
 
-    // ── Footer: badge + link button ──────────────────────────────────────
+    // ── Link button ───────────────────────────────────────────────────────
     const footer = tile.createDiv('ito-tile-footer');
-    footer.createEl('span', {
-      text: this.modalityLabel(neighbor.modality),
-      cls: `ito-badge ito-badge--${neighbor.modality}`,
-    });
-
-    const linkBtn = footer.createEl('button', { text: '+ Link', cls: 'ito-btn-link' });
+    const linkBtn = footer.createEl('button', { text: '+ Add link', cls: 'ito-btn-link' });
     linkBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
       await this.addBacklink(neighbor.filePath);
@@ -194,16 +197,9 @@ export class ItoPanel extends ItemView {
     new Notice('Ito: link added to Related section.');
   }
 
-  private renderState(message: string): void {
-    this.panelContent.empty();
-    const wrap = this.panelContent.createDiv('ito-state-wrap');
-    wrap.createEl('p', { text: message, cls: 'ito-state' });
-  }
-
   private renderEmpty(message: string): void {
     this.panelContent.empty();
-    const wrap = this.panelContent.createDiv('ito-state-wrap');
-    wrap.createEl('p', { text: message, cls: 'ito-state' });
+    this.panelContent.createDiv('ito-state-wrap').createEl('p', { text: message, cls: 'ito-state' });
   }
 
   private modalityLabel(modality: string): string {

@@ -1,55 +1,52 @@
 /* ── Ito — Art of Ma ─────────────────────────────────────────────────────────
-   Earth tones. No borders. No gradients. No pure black.
-   Separation through tonal shifts and breathing room.
+   Warm cream. Serif titles. Editorial cards. No borders. No gradients.
    ─────────────────────────────────────────────────────────────────────────── */
 
 .theme-light, .theme-dark {
-  --ito-surface:               #feffd7;
-  --ito-surface-dim:           #f5f6cc;
-  --ito-surface-container:     #f6f4e8;
-  --ito-surface-container-low: #faf9ed;
-  --ito-surface-container-high:#f0ede0;
-  --ito-surface-highest:       #ebe9db;
+  --ito-bg:          #f6f4e8;
+  --ito-card:        #faf9f2;
+  --ito-card-hover:  #fefdf6;
+  --ito-highest:     #ede9d8;
 
-  --ito-on-surface:            #38382f;
-  --ito-on-surface-2:          #5c5b50;
-  --ito-on-surface-3:          #8a8974;
+  --ito-ink:         #38382f;
+  --ito-ink-2:       #6b6a5c;
+  --ito-ink-3:       #9e9c8c;
 
-  --ito-primary:               #3d4a35;
-  --ito-primary-container:     #dee3e6;
-  --ito-on-primary-container:  #2e3828;
+  --ito-green:       #5d6758;
+  --ito-green-bg:    #dce4d8;
+  --ito-green-dark:  #2a3d26;
+  --ito-clay:        #8b6e4e;
+  --ito-clay-bg:     #e8ddd0;
+  --ito-slate-bg:    #dee3e6;
+  --ito-slate-dark:  #2e3828;
+  --ito-purple-bg:   #ddd8e4;
+  --ito-purple-dark: #2e2840;
 
-  --ito-secondary:             #5d6758;
-  --ito-tertiary:              #8b6e4e;
-  --ito-tertiary-container:    #e8ddd0;
+  --ito-shadow-sm:  0 1px 3px rgba(56,56,47,0.06), 0 1px 8px rgba(56,56,47,0.04);
+  --ito-shadow-md:  0 2px 12px rgba(56,56,47,0.08), 0 1px 4px rgba(56,56,47,0.05);
+  --ito-shadow-lg:  0 4px 24px rgba(56,56,47,0.10), 0 2px 8px rgba(56,56,47,0.06);
 
-  --ito-shadow: 0 2px 12px -2px rgba(56,56,47,0.07), 0 1px 4px -1px rgba(56,56,47,0.04);
-  --ito-shadow-hover: 0 4px 20px -4px rgba(56,56,47,0.10), 0 2px 8px -2px rgba(56,56,47,0.06);
+  --ito-r:       10px;
+  --ito-r-sm:    6px;
+  --ito-r-pill:  999px;
+  --ito-ease:    cubic-bezier(0.4, 0, 0.2, 1);
+  --ito-t:       160ms;
 
-  --ito-radius: 10px;
-  --ito-radius-sm: 6px;
-  --ito-radius-pill: 9999px;
-
-  --ito-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --ito-duration: 180ms;
-
-  --ito-font-serif: 'Noto Serif', Georgia, serif;
-  --ito-font-sans: 'Manrope', 'Inter', system-ui, sans-serif;
+  --ito-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
+  --ito-sans:  'Manrope', 'Inter', system-ui, sans-serif;
 }
 
 /* ── Panel shell ─────────────────────────────────────────────────────────── */
 
 .ito-panel {
-  font-family: var(--ito-font-sans);
-  color: var(--ito-on-surface);
-  background: var(--ito-surface-container);
+  font-family: var(--ito-sans);
+  color: var(--ito-ink);
+  background-color: var(--ito-bg);
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
-  scrollbar-color: var(--ito-surface-highest) transparent;
-  /* Subtle paper grain */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  scrollbar-color: var(--ito-highest) transparent;
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -58,164 +55,186 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 16px 10px;
+  padding: 16px 16px 12px;
   position: sticky;
   top: 0;
-  background: var(--ito-surface-container);
+  background-color: var(--ito-bg);
   z-index: 10;
-  /* Grain on sticky header too */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
-.ito-header-title {
-  font-family: var(--ito-font-serif);
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ito-on-surface-3);
-}
-
-.ito-header-actions {
+.ito-header-left {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ito-wordmark {
+  font-family: var(--ito-serif);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--ito-ink);
+}
+
+.ito-count {
+  font-size: 11px;
+  color: var(--ito-ink-3);
+  letter-spacing: 0.02em;
 }
 
 .ito-btn-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
   background: transparent;
   border: none;
-  border-radius: var(--ito-radius-sm);
-  color: var(--ito-on-surface-3);
+  border-radius: var(--ito-r-sm);
+  color: var(--ito-ink-3);
   cursor: pointer;
-  padding: 0;
   box-shadow: none;
-  transition: background var(--ito-duration) var(--ito-ease),
-              color var(--ito-duration) var(--ito-ease);
+  transition: background var(--ito-t) var(--ito-ease), color var(--ito-t) var(--ito-ease);
 }
-
 .ito-btn-icon:hover {
-  background: var(--ito-surface-highest);
-  color: var(--ito-on-surface);
+  background: var(--ito-highest);
+  color: var(--ito-ink);
 }
 
 /* ── Threshold slider ────────────────────────────────────────────────────── */
 
 .ito-slider-row {
-  padding: 4px 16px 14px;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 6px;
 }
 
 .ito-slider-label {
   font-size: 11px;
-  color: var(--ito-on-surface-3);
-  letter-spacing: 0.02em;
+  color: var(--ito-ink-3);
 }
 
-.ito-slider-label strong {
-  color: var(--ito-secondary);
-  font-weight: 600;
+.ito-slider-value {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ito-green);
+  letter-spacing: 0.03em;
+}
+
+.ito-slider-wrap {
+  padding: 0 16px 14px;
 }
 
 .ito-slider {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 3px;
-  background: var(--ito-surface-highest);
-  border-radius: var(--ito-radius-pill);
+  height: 2px;
+  background: var(--ito-highest);
+  border-radius: var(--ito-r-pill);
   outline: none;
   cursor: pointer;
+  display: block;
 }
-
 .ito-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
-  background: var(--ito-secondary);
+  background: var(--ito-green);
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(56,56,47,0.2);
-  transition: transform var(--ito-duration) var(--ito-ease);
+  box-shadow: 0 1px 4px rgba(56,56,47,0.25);
+  transition: transform var(--ito-t) var(--ito-ease);
 }
-
-.ito-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.25);
-}
+.ito-slider::-webkit-slider-thumb:hover { transform: scale(1.3); }
 
 /* ── Tiles list ──────────────────────────────────────────────────────────── */
 
 .ito-tiles {
-  padding: 2px 10px 20px;
+  padding: 2px 10px 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
-/* ── Tile ────────────────────────────────────────────────────────────────── */
+/* ── Tile card ───────────────────────────────────────────────────────────── */
 
 .ito-tile {
-  background: var(--ito-surface-container-low);
-  border-radius: var(--ito-radius);
-  padding: 13px 14px 11px;
-  box-shadow: var(--ito-shadow);
-  transition: background var(--ito-duration) var(--ito-ease),
-              box-shadow var(--ito-duration) var(--ito-ease),
-              transform var(--ito-duration) var(--ito-ease);
-  cursor: default;
+  background: var(--ito-card);
+  border-radius: var(--ito-r);
+  padding: 12px 14px 12px;
+  box-shadow: var(--ito-shadow-sm);
+  cursor: pointer;
+  transition:
+    background var(--ito-t) var(--ito-ease),
+    box-shadow var(--ito-t) var(--ito-ease),
+    transform var(--ito-t) var(--ito-ease);
+  outline: none;
+  user-select: none;
 }
 
 .ito-tile:hover {
-  background: var(--ito-surface-container-high);
-  box-shadow: var(--ito-shadow-hover);
+  background: var(--ito-card-hover);
+  box-shadow: var(--ito-shadow-md);
   transform: translateY(-1px);
 }
 
-/* ── Tile top row ────────────────────────────────────────────────────────── */
+.ito-tile:active {
+  transform: translateY(0);
+  box-shadow: var(--ito-shadow-sm);
+}
 
-.ito-tile-top {
+/* ── Meta row: badge + score ─────────────────────────────────────────────── */
+
+.ito-tile-meta {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 7px;
 }
 
-.ito-tile-title {
-  font-family: var(--ito-font-serif);
-  font-size: 13.5px;
-  font-weight: 400;
-  color: var(--ito-on-surface);
-  background: transparent;
-  border: none;
-  padding: 0;
-  text-align: left;
-  cursor: pointer;
-  line-height: 1.4;
-  flex: 1;
-  box-shadow: none;
-  transition: color var(--ito-duration) var(--ito-ease);
+/* ── Modality badges ─────────────────────────────────────────────────────── */
+
+.ito-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: var(--ito-r-pill);
+  line-height: 1.6;
 }
 
-.ito-tile-title:hover {
-  color: var(--ito-secondary);
-}
+.ito-badge--text  { background: var(--ito-highest);    color: var(--ito-ink-2); }
+.ito-badge--image { background: var(--ito-clay-bg);    color: var(--ito-clay); }
+.ito-badge--pdf   { background: var(--ito-slate-bg);   color: var(--ito-slate-dark); }
+.ito-badge--audio { background: var(--ito-green-bg);   color: var(--ito-green-dark); }
+.ito-badge--video { background: var(--ito-purple-bg);  color: var(--ito-purple-dark); }
 
-.ito-tile-score {
+.ito-score {
   font-size: 11px;
   font-weight: 700;
-  color: var(--ito-secondary);
+  color: var(--ito-green);
   letter-spacing: 0.03em;
-  flex-shrink: 0;
-  margin-top: 2px;
-  opacity: 0.85;
+  opacity: 0.9;
+}
+
+/* ── Tile title ──────────────────────────────────────────────────────────── */
+
+/* Plain <p> — no button, no heading, no black bar */
+.ito-tile-title {
+  font-family: var(--ito-serif);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--ito-ink);
+  line-height: 1.4;
+  margin: 0 0 8px;
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
 
 /* ── Matched content snippet ─────────────────────────────────────────────── */
@@ -226,18 +245,18 @@
 
 .ito-snippet-label {
   display: block;
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ito-on-surface-3);
+  color: var(--ito-ink-3);
   margin-bottom: 3px;
 }
 
 .ito-snippet-text {
-  font-size: 12px;
-  color: var(--ito-on-surface-2);
-  line-height: 1.65;
+  font-size: 11.5px;
+  color: var(--ito-ink-2);
+  line-height: 1.6;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -249,116 +268,80 @@
 
 .ito-tile-footer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 2px;
+  justify-content: flex-end;
+  margin-top: 4px;
 }
-
-/* ── Modality badges ─────────────────────────────────────────────────────── */
-
-.ito-badge {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: var(--ito-radius-pill);
-  line-height: 1.5;
-  flex-shrink: 0;
-}
-
-.ito-badge--text  { background: var(--ito-surface-highest);    color: var(--ito-on-surface-2); }
-.ito-badge--image { background: var(--ito-tertiary-container);  color: var(--ito-tertiary); }
-.ito-badge--pdf   { background: var(--ito-primary-container);   color: var(--ito-on-primary-container); }
-.ito-badge--audio { background: #dce4d8; color: #2a3d26; }
-.ito-badge--video { background: #ddd8e4; color: #2e2840; }
 
 /* ── Link button ─────────────────────────────────────────────────────────── */
 
 .ito-btn-link {
-  font-family: var(--ito-font-sans);
-  font-size: 11px;
+  font-family: var(--ito-sans);
+  font-size: 10.5px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--ito-on-surface-2);
-  background: var(--ito-surface-highest);
+  color: var(--ito-ink-2);
+  background: var(--ito-highest);
   border: none;
-  border-radius: var(--ito-radius-sm);
+  border-radius: var(--ito-r-sm);
   padding: 4px 10px;
   cursor: pointer;
   box-shadow: none;
-  transition: background var(--ito-duration) var(--ito-ease),
-              color var(--ito-duration) var(--ito-ease);
+  transition: background var(--ito-t) var(--ito-ease), color var(--ito-t) var(--ito-ease);
   white-space: nowrap;
 }
-
 .ito-btn-link:hover {
-  background: var(--ito-primary-container);
-  color: var(--ito-on-primary-container);
+  background: var(--ito-green-bg);
+  color: var(--ito-green-dark);
 }
-
 .ito-btn-link--done {
-  background: #dce4d8;
-  color: #2a3d26;
+  background: var(--ito-green-bg);
+  color: var(--ito-green-dark);
   cursor: default;
+  opacity: 0.8;
 }
 
-/* ── State / empty ───────────────────────────────────────────────────────── */
+/* ── State / empty messages ──────────────────────────────────────────────── */
 
 .ito-state-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 140px;
-  padding: 24px 20px;
+  padding: 40px 20px;
 }
 
-.ito-state {
-  font-size: 12.5px;
-  color: var(--ito-on-surface-3);
-  line-height: 1.7;
-  text-align: center;
-  margin: 0;
-}
-
+.ito-state,
 .ito-empty {
   font-size: 12px;
-  color: var(--ito-on-surface-3);
+  color: var(--ito-ink-3);
   line-height: 1.7;
   text-align: center;
   margin: 0;
-  padding: 20px 8px;
 }
 
 /* ── Modal ───────────────────────────────────────────────────────────────── */
 
-.ito-modal {
-  font-family: var(--ito-font-sans);
-}
+.ito-modal { font-family: var(--ito-sans); }
 
 .ito-modal-title {
-  font-family: var(--ito-font-serif);
+  font-family: var(--ito-serif);
   font-size: 17px;
   font-weight: 400;
   letter-spacing: 0.02em;
-  color: var(--ito-on-surface);
+  color: var(--ito-ink);
   margin-bottom: 20px;
 }
 
-.ito-modal .ito-tiles {
-  padding: 0;
-}
+.ito-modal .ito-tiles { padding: 0; }
 
 /* ── Settings ────────────────────────────────────────────────────────────── */
 
 .ito-settings-section {
-  font-family: var(--ito-font-serif);
+  font-family: var(--ito-serif);
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ito-on-surface-3);
+  color: var(--ito-ink-3);
   margin-top: 2rem;
   padding-bottom: 0.5rem;
   border-bottom: none;
