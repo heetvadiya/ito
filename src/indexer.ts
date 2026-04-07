@@ -104,8 +104,8 @@ export class ItoIndexer {
         if (i < chunks.length - 1) await sleep(RATE_LIMIT_MS_LIGHT);
       }
     } else {
-      // Skip media files already embedded inside a note (image, audio, video)
-      const isEmbeddableMedia = ['image', 'audio', 'video'].includes(modality.modality);
+      // Skip media files already embedded inside a note (image, audio, video, pdf)
+      const isEmbeddableMedia = ['image', 'audio', 'video', 'pdf'].includes(modality.modality);
       if (isEmbeddableMedia && this.embeddedImagePaths.has(file.path)) {
         console.log(`Ito: skipping standalone index of ${file.path} — embedded in a note`);
         return;
@@ -282,8 +282,8 @@ export class ItoIndexer {
       const mediaModality = ModalityRegistry.get(resolvedPath);
       if (!mediaModality) continue;
 
-      // PDFs handled separately — skip here
-      if (mediaModality.modality === 'pdf') continue;
+      // PDFs: model handles text + images per page natively (max 6 pages)
+      // Include them in composite — no special handling needed
 
       try {
         const mediaBuffer = await this.app.vault.readBinary(mediaFile);

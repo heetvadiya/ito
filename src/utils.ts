@@ -77,7 +77,7 @@ export function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// All embeddable media extensions (PDFs handled separately)
+// All embeddable media extensions
 const EMBEDDABLE_EXTENSIONS = new Set([
   // Images
   '.png', '.jpg', '.jpeg', '.webp',
@@ -85,6 +85,8 @@ const EMBEDDABLE_EXTENSIONS = new Set([
   '.mp3', '.wav', '.m4a', '.ogg', '.flac',
   // Video
   '.mp4', '.mov', '.webm',
+  // Documents
+  '.pdf',
 ]);
 
 // Extract embedded media file paths from markdown content.
