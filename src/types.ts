@@ -12,14 +12,9 @@ export type FileIndexState =
   | 'failed'
   | 'skipped';
 
-export interface EmbedPayload {
-  type: 'text';
-  content: string;
-} | {
-  type: 'inline';
-  mimeType: string;
-  base64: string;
-}
+export type EmbedPayload =
+  | { type: 'text'; content: string }
+  | { type: 'inline'; mimeType: string; base64: string };
 
 export interface EmbeddingRecord {
   filePath: string;
