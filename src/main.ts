@@ -7,6 +7,7 @@ import { ItoVectorIndex } from './vector-index';
 import { ItoSettingTab } from './settings';
 import { ItoPanel, ITO_PANEL_VIEW_TYPE } from './panel';
 import { ItoResultsModal } from './modal';
+import { GraphExporter } from './graph-exporter';
 
 export default class ItoPlugin extends Plugin {
   settings!: IndexPolicy;
@@ -14,6 +15,7 @@ export default class ItoPlugin extends Plugin {
   embedder!: ItoEmbedder;
   indexer!: ItoIndexer;
   vectorIndex!: ItoVectorIndex;
+  graphExporter!: GraphExporter;
   private statusBar!: HTMLElement;
 
   async onload(): Promise<void> {
@@ -29,6 +31,7 @@ export default class ItoPlugin extends Plugin {
     );
 
     this.vectorIndex = new ItoVectorIndex(this.store);
+    this.graphExporter = new GraphExporter(this.app, this.store);
 
     this.indexer = new ItoIndexer(
       this.app,
@@ -37,11 +40,12 @@ export default class ItoPlugin extends Plugin {
       () => this.settings,
     );
 
-    // Propagate indexer events to the open panel and status bar
+    // Propagate indexer events to panel, status bar, and graph export
     this.indexer.on(event => {
       if (event.type === 'file-indexed') {
         this.refreshPanel();
         this.updateStatusBar();
+        this.graphExporter.scheduleExport();
       }
     });
 
@@ -90,6 +94,13 @@ export default class ItoPlugin extends Plugin {
     // Active file change → refresh panel
     this.registerEvent(
       this.app.workspace.on('active-leaf-change', () => this.refreshPanel())
+    );
+
+    // Metadata cache changes (links added/removed) → schedule graph export
+    this.registerEvent(
+      this.app.metadataCache.on('changed', () => {
+        this.graphExporter.scheduleExport();
+      })
     );
 
     // Commands
@@ -147,11 +158,22 @@ export default class ItoPlugin extends Plugin {
       },
     });
 
-    // Reconcile after layout ready — never block Obsidian startup
+    this.addCommand({
+      id: 'export-graph',
+      name: 'Export vault graph',
+      callback: async () => {
+        await this.graphExporter.export();
+        new Notice('Ito: vault-graph.json updated.');
+      },
+    });
+
+    // Reconcile + export graph after layout ready
     this.app.workspace.onLayoutReady(() => {
       if (this.settings.geminiApiKey) {
         this.indexer.reconcile();
       }
+      // Export graph regardless of API key — links/backlinks don't need embeddings
+      this.graphExporter.scheduleExport();
     });
   }
 
