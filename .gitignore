@@ -1,0 +1,10 @@
+node_modules/
+main.js
+*.js.map
+.DS_Store
+*.db
+*.db-shm
+*.db-wal
+dist/
+.env
+test-embed.ts

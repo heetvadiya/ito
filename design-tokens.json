@@ -1,0 +1,542 @@
+{
+  "$meta": {
+    "name": "The Art of Ma",
+    "version": "1.0.0",
+    "description": "A Zen-inspired design system rooted in Ma (negative space), Wabi-Sabi (textured imperfection), and Kanso (simplicity). Treats the UI as an editorial composition — ink on washi paper, not light on glass.",
+    "principle": "If a screen feels cluttered, remove an element rather than shrinking it."
+  },
+
+  "color": {
+    "$description": "Earth-borne tones. No pure white (#FFFFFF) or pure black (#000000). Separation through tonal shifts and negative space — never 1px borders.",
+
+    "surface": {
+      "$value": "#feffd7",
+      "$description": "The foundational tatami mat. Base layer for all canvases.",
+      "$role": "base"
+    },
+    "surface-dim": {
+      "$value": "#f5f6cc",
+      "$description": "Slightly muted surface, used for receded backgrounds.",
+      "$role": "base-dim"
+    },
+    "surface-bright": {
+      "$value": "#fffff3",
+      "$description": "Brighter warm surface for elevated focus areas.",
+      "$role": "base-bright"
+    },
+    "surface-container-lowest": {
+      "$value": "#fffff8",
+      "$description": "Off-white. Used sparingly as floating element background. Not pure white.",
+      "$role": "container-lowest"
+    },
+    "surface-container-low": {
+      "$value": "#faf9ed",
+      "$description": "Hover state backgrounds for list items.",
+      "$role": "container-low"
+    },
+    "surface-container": {
+      "$value": "#f6f4e8",
+      "$description": "Secondary panels, sidebars, and container backgrounds.",
+      "$role": "container"
+    },
+    "surface-container-high": {
+      "$value": "#f0ede0",
+      "$description": "Slightly elevated containers.",
+      "$role": "container-high"
+    },
+    "surface-container-highest": {
+      "$value": "#ebe9db",
+      "$description": "Elevated focus areas. The highest layer of paper.",
+      "$role": "container-highest"
+    },
+
+    "on-surface": {
+      "$value": "#38382f",
+      "$description": "Primary text and icon color. Warm charcoal, not pure black.",
+      "$role": "text-primary"
+    },
+    "on-surface-variant": {
+      "$value": "#5c5b50",
+      "$description": "Secondary text, placeholders, subdued labels.",
+      "$role": "text-secondary"
+    },
+    "on-surface-muted": {
+      "$value": "#8a8974",
+      "$description": "Tertiary text, decorative labels, timestamps.",
+      "$role": "text-muted"
+    },
+
+    "primary": {
+      "$value": "#3d4a35",
+      "$description": "Deep forest. Used for the highest emphasis interactive elements.",
+      "$role": "brand-primary"
+    },
+    "primary-container": {
+      "$value": "#dee3e6",
+      "$description": "Low-contrast button background. Soft blue-grey.",
+      "$role": "brand-primary-container"
+    },
+    "on-primary": {
+      "$value": "#f6f4e8",
+      "$description": "Text on primary-colored backgrounds.",
+      "$role": "text-on-primary"
+    },
+    "on-primary-container": {
+      "$value": "#2e3828",
+      "$description": "Text on primary-container backgrounds.",
+      "$role": "text-on-primary-container"
+    },
+
+    "secondary": {
+      "$value": "#5d6758",
+      "$description": "Forest green anchor. Used as key focus points to ground airy neutrals.",
+      "$role": "brand-secondary"
+    },
+    "secondary-container": {
+      "$value": "#dce4d8",
+      "$description": "Secondary container for badges or soft labels.",
+      "$role": "brand-secondary-container"
+    },
+    "on-secondary": {
+      "$value": "#f6f4e8",
+      "$description": "Text on secondary-colored backgrounds.",
+      "$role": "text-on-secondary"
+    },
+    "on-secondary-container": {
+      "$value": "#1e2b1a",
+      "$description": "Text on secondary-container backgrounds.",
+      "$role": "text-on-secondary-container"
+    },
+
+    "tertiary": {
+      "$value": "#8b6e4e",
+      "$description": "Clay. Used as warm accent and ground point for Stone compositions.",
+      "$role": "brand-tertiary"
+    },
+    "tertiary-container": {
+      "$value": "#e8ddd0",
+      "$description": "Warm clay container for callouts or accents.",
+      "$role": "brand-tertiary-container"
+    },
+    "on-tertiary": {
+      "$value": "#feffd7",
+      "$description": "Text on tertiary-colored backgrounds.",
+      "$role": "text-on-tertiary"
+    },
+    "on-tertiary-container": {
+      "$value": "#3a2510",
+      "$description": "Text on tertiary-container backgrounds.",
+      "$role": "text-on-tertiary-container"
+    },
+
+    "outline": {
+      "$value": "#8a8974",
+      "$description": "For structural outlines where absolutely required.",
+      "$role": "border"
+    },
+    "outline-variant": {
+      "$value": "#bbbaad",
+      "$description": "The Ghost Border. At 15% opacity — a whisper, not a statement.",
+      "$role": "border-ghost"
+    },
+
+    "error": {
+      "$value": "#7c4a3a",
+      "$description": "Error states. Warm terracotta, not harsh red.",
+      "$role": "semantic-error"
+    },
+    "error-container": {
+      "$value": "#f0ddd8",
+      "$description": "Error container for alert backgrounds.",
+      "$role": "semantic-error-container"
+    },
+    "on-error": {
+      "$value": "#feffd7",
+      "$description": "Text on error backgrounds.",
+      "$role": "text-on-error"
+    },
+
+    "success": {
+      "$value": "#4a6b42",
+      "$description": "Subtle moss green for success states.",
+      "$role": "semantic-success"
+    },
+    "warning": {
+      "$value": "#9b7b2e",
+      "$description": "Warm amber for warning states.",
+      "$role": "semantic-warning"
+    },
+
+    "scrim": {
+      "$value": "#38382f",
+      "$description": "Overlay/scrim color at low opacity (20-40%) for modals.",
+      "$role": "overlay"
+    },
+
+    "noise-overlay": {
+      "$value": "rgba(56, 56, 47, 0.04)",
+      "$description": "Global noise texture overlay. 3-5% opacity. Mimics grain of stone and handmade paper.",
+      "$role": "texture"
+    }
+  },
+
+  "typography": {
+    "$description": "Editorial voice. Serif for display, humanist sans for interface. Large line heights. Asymmetric weighting.",
+
+    "fontFamily": {
+      "display": {
+        "$value": "'Noto Serif', 'Georgia', serif",
+        "$description": "Headlines and Display roles. Conveys elegance and editorial authority.",
+        "$role": "display"
+      },
+      "interface": {
+        "$value": "'Manrope', 'Inter', sans-serif",
+        "$description": "Title, Body, and Labels. Humanist sans-serif for legibility.",
+        "$role": "interface"
+      },
+      "mono": {
+        "$value": "'Noto Serif Mono', 'Courier New', monospace",
+        "$description": "Code blocks and monospaced content.",
+        "$role": "mono"
+      }
+    },
+
+    "fontSize": {
+      "display-xl": { "$value": "3.5rem",   "$px": 56 },
+      "display-lg": { "$value": "2.75rem",  "$px": 44 },
+      "display-md": { "$value": "2.25rem",  "$px": 36 },
+      "display-sm": { "$value": "1.875rem", "$px": 30 },
+      "headline-lg": { "$value": "1.5rem",  "$px": 24 },
+      "headline-md": { "$value": "1.25rem", "$px": 20 },
+      "headline-sm": { "$value": "1.125rem","$px": 18 },
+      "title-lg":    { "$value": "1rem",    "$px": 16 },
+      "title-md":    { "$value": "0.9375rem","$px": 15 },
+      "title-sm":    { "$value": "0.875rem","$px": 14 },
+      "body-lg":     { "$value": "1rem",    "$px": 16 },
+      "body-md":     { "$value": "0.9375rem","$px": 15 },
+      "body-sm":     { "$value": "0.875rem","$px": 14 },
+      "label-lg":    { "$value": "0.875rem","$px": 14 },
+      "label-md":    { "$value": "0.8125rem","$px": 13 },
+      "label-sm":    { "$value": "0.75rem", "$px": 12 }
+    },
+
+    "fontWeight": {
+      "light":       { "$value": 300, "$usage": "Large display headlines. Light in weight, generous in space." },
+      "regular":     { "$value": 400, "$usage": "Body text and standard display." },
+      "medium":      { "$value": 500, "$usage": "Titles and emphasized interface text." },
+      "semibold":    { "$value": 600, "$usage": "Small labels for accessibility. Bold without shouting." },
+      "bold":        { "$value": 700, "$usage": "Use sparingly. Only for critical interface hierarchy." }
+    },
+
+    "lineHeight": {
+      "display":   { "$value": 1.15, "$description": "Tight for large display. Allows headlines to breathe through letter-spacing." },
+      "heading":   { "$value": 1.3,  "$description": "Comfortable heading rhythm." },
+      "body":      { "$value": 1.75, "$description": "Generous body. Minimum 1.6, target 1.75. Space between lines is as important as words." },
+      "ui":        { "$value": 1.4,  "$description": "Compact for interface elements (labels, buttons, inputs)." },
+      "tight":     { "$value": 1.2,  "$description": "For very short strings (single words, badges, tags)." }
+    },
+
+    "letterSpacing": {
+      "display":   { "$value": "0.04em",  "$description": "Wide. Gallery-like feel for large serif headlines." },
+      "heading":   { "$value": "0.02em",  "$description": "Slightly tracked out for elegance." },
+      "body":      { "$value": "0em",     "$description": "Natural. No tracking in body text." },
+      "ui":        { "$value": "0.01em",  "$description": "Subtle air in interface text." },
+      "label":     { "$value": "0.06em",  "$description": "Tracked for small uppercase labels and metadata." },
+      "caps":      { "$value": "0.12em",  "$description": "All-caps label spacing." }
+    },
+
+    "scale": {
+      "display-xl": {
+        "$family": "display",
+        "$size": "display-xl",
+        "$weight": "light",
+        "$lineHeight": "display",
+        "$letterSpacing": "display"
+      },
+      "display-lg": {
+        "$family": "display",
+        "$size": "display-lg",
+        "$weight": "light",
+        "$lineHeight": "display",
+        "$letterSpacing": "display"
+      },
+      "headline-lg": {
+        "$family": "display",
+        "$size": "headline-lg",
+        "$weight": "regular",
+        "$lineHeight": "heading",
+        "$letterSpacing": "heading"
+      },
+      "title-lg": {
+        "$family": "interface",
+        "$size": "title-lg",
+        "$weight": "medium",
+        "$lineHeight": "ui",
+        "$letterSpacing": "ui"
+      },
+      "body-lg": {
+        "$family": "interface",
+        "$size": "body-lg",
+        "$weight": "regular",
+        "$lineHeight": "body",
+        "$letterSpacing": "body"
+      },
+      "label-sm": {
+        "$family": "interface",
+        "$size": "label-sm",
+        "$weight": "semibold",
+        "$lineHeight": "tight",
+        "$letterSpacing": "label"
+      }
+    }
+  },
+
+  "spacing": {
+    "$description": "The Ma Scale. Each step is a potential 'void' that acts as an invisible boundary. Prefer removing an element over shrinking space.",
+    "0":   { "$value": "0rem",     "$px": 0 },
+    "1":   { "$value": "0.25rem",  "$px": 4 },
+    "2":   { "$value": "0.5rem",   "$px": 8 },
+    "3":   { "$value": "0.75rem",  "$px": 12 },
+    "4":   { "$value": "1rem",     "$px": 16 },
+    "5":   { "$value": "1.25rem",  "$px": 20 },
+    "6":   { "$value": "1.5rem",   "$px": 24 },
+    "8":   { "$value": "2rem",     "$px": 32 },
+    "10":  { "$value": "2.5rem",   "$px": 40 },
+    "12":  { "$value": "3rem",     "$px": 48 },
+    "16":  { "$value": "4rem",     "$px": 64 },
+    "20":  { "$value": "5rem",     "$px": 80 },
+    "24":  { "$value": "6rem",     "$px": 96 },
+    "32":  { "$value": "8rem",     "$px": 128 },
+    "40":  { "$value": "10rem",    "$px": 160 },
+    "48":  { "$value": "12rem",    "$px": 192 },
+    "64":  { "$value": "16rem",    "$px": 256 },
+
+    "semantic": {
+      "button-padding-x":      { "$value": "1.5rem",  "$px": 24,  "$description": "Extra-wide horizontal button padding at 14px font." },
+      "button-padding-y":      { "$value": "0.625rem","$px": 10 },
+      "input-padding-x":       { "$value": "0.75rem", "$px": 12 },
+      "input-padding-y":       { "$value": "0.5rem",  "$px": 8 },
+      "card-padding":          { "$value": "1.5rem",  "$px": 24 },
+      "section-gap":           { "$value": "3rem",    "$px": 48,  "$description": "Gap between major sections. A breath." },
+      "content-max-width":     { "$value": "68ch",                "$description": "Optimal reading width for body content." },
+      "sidebar-width":         { "$value": "16rem",   "$px": 256 },
+      "ma-block-sm":           { "$value": "2rem",    "$px": 32,  "$description": "Small Ma Spacer block." },
+      "ma-block-md":           { "$value": "4rem",    "$px": 64,  "$description": "Medium Ma Spacer block." },
+      "ma-block-lg":           { "$value": "8rem",    "$px": 128, "$description": "Large Ma Spacer block. Use deliberately." }
+    }
+  },
+
+  "shape": {
+    "$description": "Architectural and stone-cut. Roundedness is minimal. Curvature is earned.",
+    "none":  { "$value": "0rem",    "$description": "Sharp. Most structural elements." },
+    "xs":    { "$value": "0.0625rem","$description": "Barely-there curve. Stone-cut precision." },
+    "sm":    { "$value": "0.125rem","$description": "Default button shape. Architectural." },
+    "md":    { "$value": "0.25rem", "$description": "Subtle rounding for inputs and containers." },
+    "lg":    { "$value": "0.5rem",  "$description": "Moderate. Chips, badges." },
+    "xl":    { "$value": "1rem",    "$description": "Pronounced. Used rarely." },
+    "full":  { "$value": "9999px",  "$description": "Pill shape. Avoid unless intentional." }
+  },
+
+  "elevation": {
+    "$description": "Depth is felt, not seen. No heavy drop shadows. Tonal layering and ambient light.",
+
+    "0": {
+      "$value": "none",
+      "$description": "No elevation. On-surface elements."
+    },
+    "1": {
+      "$value": "0 2px 8px -2px rgba(56, 56, 47, 0.04), 0 1px 3px -1px rgba(56, 56, 47, 0.03)",
+      "$description": "Ambient lift. Cards resting slightly above the base surface."
+    },
+    "2": {
+      "$value": "0 4px 16px -4px rgba(56, 56, 47, 0.05), 0 2px 6px -2px rgba(56, 56, 47, 0.04)",
+      "$description": "Soft float. Dropdowns and popovers."
+    },
+    "3": {
+      "$value": "0 8px 32px -8px rgba(56, 56, 47, 0.06), 0 4px 12px -4px rgba(56, 56, 47, 0.04)",
+      "$description": "Ambient bloom. Floating command bars and modal sheets."
+    },
+    "4": {
+      "$value": "0 16px 48px -12px rgba(56, 56, 47, 0.07), 0 8px 20px -6px rgba(56, 56, 47, 0.05)",
+      "$description": "Maximum ambient elevation. Modal dialogs."
+    },
+
+    "glass": {
+      "background":        { "$value": "rgba(254, 255, 215, 0.80)", "$description": "Frosted glass. Surface at 80% opacity." },
+      "backdrop-filter":   { "$value": "blur(12px)",                "$description": "Allows the Digital Garden underneath to bleed through." },
+      "border":            { "$value": "1px solid rgba(187, 186, 173, 0.15)", "$description": "Ghost border at 15% — a whisper." }
+    },
+
+    "ghost-border": {
+      "$value": "1px solid rgba(187, 186, 173, 0.15)",
+      "$description": "If a boundary is strictly required for accessibility. A whisper, not a statement."
+    }
+  },
+
+  "motion": {
+    "$description": "No loud animations. Transitions are slow and natural. Ease-in-out mimics natural movement.",
+
+    "duration": {
+      "instant":   { "$value": "0ms",   "$description": "Imperceptible state changes." },
+      "fast":      { "$value": "150ms", "$description": "Hover state transitions." },
+      "base":      { "$value": "300ms", "$description": "Standard transition. Minimum for most interactions." },
+      "slow":      { "$value": "500ms", "$description": "Page-level transitions and reveals." },
+      "languid":   { "$value": "800ms", "$description": "Ceremonial transitions. Opening/closing panels." },
+      "breath":    { "$value": "1200ms","$description": "Ambient loops and Ma Spacer reveals." }
+    },
+
+    "easing": {
+      "standard":      { "$value": "cubic-bezier(0.4, 0, 0.2, 1)",  "$description": "Material standard. Most interactions." },
+      "ease-in-out":   { "$value": "cubic-bezier(0.45, 0, 0.55, 1)","$description": "Natural movement. Preferred default." },
+      "decelerate":    { "$value": "cubic-bezier(0, 0, 0.2, 1)",     "$description": "Elements entering the screen." },
+      "accelerate":    { "$value": "cubic-bezier(0.4, 0, 1, 1)",     "$description": "Elements leaving the screen." },
+      "spring":        { "$value": "cubic-bezier(0.34, 1.56, 0.64, 1)","$description": "Gentle overshoot for organic feel. Use sparingly." }
+    },
+
+    "rules": {
+      "no-gradients":       "Avoid any color ramps. Use flat, matte tonal shifts.",
+      "no-harsh-animation": "Never use linear or ease-in for visible UI transitions.",
+      "minimum-duration":   "No transition should be perceptible at < 300ms for non-hover states.",
+      "hover-only-fast":    "150ms is reserved for hover states only."
+    }
+  },
+
+  "component": {
+    "button": {
+      "primary": {
+        "background":     { "$ref": "color.primary-container" },
+        "color":          { "$ref": "color.on-primary-container" },
+        "border-radius":  { "$ref": "shape.sm" },
+        "padding-x":      { "$ref": "spacing.semantic.button-padding-x" },
+        "padding-y":      { "$ref": "spacing.semantic.button-padding-y" },
+        "font-family":    { "$ref": "typography.fontFamily.interface" },
+        "font-size":      { "$ref": "typography.fontSize.label-lg" },
+        "font-weight":    { "$ref": "typography.fontWeight.medium" },
+        "letter-spacing": { "$ref": "typography.letterSpacing.ui" },
+        "shadow":         "none",
+        "$note":          "Low-contrast. No harsh shadows. The button should not shout."
+      },
+      "secondary": {
+        "background":     "transparent",
+        "color":          { "$ref": "color.on-surface" },
+        "border":         { "$ref": "elevation.ghost-border" },
+        "border-radius":  { "$ref": "shape.sm" }
+      },
+      "ghost": {
+        "background":     "transparent",
+        "color":          { "$ref": "color.on-surface-variant" },
+        "border":         "none",
+        "$note":          "The quietest button. Text and hover state only."
+      }
+    },
+
+    "input": {
+      "background":       { "$ref": "color.surface-container" },
+      "color":            { "$ref": "color.on-surface" },
+      "border":           "none",
+      "border-bottom":    "1px solid rgba(56, 56, 47, 0.2)",
+      "border-radius":    { "$ref": "shape.none" },
+      "padding-x":        { "$ref": "spacing.semantic.input-padding-x" },
+      "padding-y":        { "$ref": "spacing.semantic.input-padding-y" },
+      "placeholder-color":{ "$ref": "color.on-surface-muted" },
+      "focus-border-bottom": "1px solid #5d6758",
+      "focus-background": { "$ref": "color.surface-container-low" },
+      "$note":            "Avoid the box. Bottom border only. Focus is a soft transition to secondary."
+    },
+
+    "card": {
+      "background":       { "$ref": "color.surface-container" },
+      "padding":          { "$ref": "spacing.semantic.card-padding" },
+      "border-radius":    { "$ref": "shape.none" },
+      "shadow":           { "$ref": "elevation.1" },
+      "hover-background": { "$ref": "color.surface-container-high" },
+      "$note":            "No horizontal dividers/rules inside cards. Items breathe in their own space."
+    },
+
+    "list-item": {
+      "padding-x":        { "$ref": "spacing.4" },
+      "padding-y":        { "$ref": "spacing.3" },
+      "gap":              { "$ref": "spacing.3" },
+      "hover-background": { "$ref": "color.surface-container-low" },
+      "divider":          "none",
+      "$note":            "No dividers. Separation through body-md spacing."
+    },
+
+    "ma-spacer": {
+      "$description":     "Bespoke component. Intentional blocks of empty space between notes/sections. Reinforces Zen philosophy.",
+      "sm":               { "$ref": "spacing.semantic.ma-block-sm" },
+      "md":               { "$ref": "spacing.semantic.ma-block-md" },
+      "lg":               { "$ref": "spacing.semantic.ma-block-lg" },
+      "visual-indicator": "A single centered glyph (●) at 8% opacity when hovered, invisible at rest."
+    },
+
+    "sidebar": {
+      "background":       { "$ref": "color.surface-container" },
+      "width":            { "$ref": "spacing.semantic.sidebar-width" },
+      "border-right":     "none",
+      "$note":            "No border between sidebar and main content. Tonal shift creates the separation."
+    },
+
+    "modal": {
+      "background":       { "$ref": "color.surface-container-lowest" },
+      "border-radius":    { "$ref": "shape.md" },
+      "shadow":           { "$ref": "elevation.4" },
+      "scrim-color":      "rgba(56, 56, 47, 0.3)",
+      "padding":          { "$ref": "spacing.8" }
+    },
+
+    "command-bar": {
+      "background":       { "$ref": "elevation.glass.background" },
+      "backdrop-filter":  { "$ref": "elevation.glass.backdrop-filter" },
+      "border":           { "$ref": "elevation.glass.border" },
+      "shadow":           { "$ref": "elevation.3" },
+      "border-radius":    { "$ref": "shape.sm" }
+    },
+
+    "tag": {
+      "background":       { "$ref": "color.surface-container-highest" },
+      "color":            { "$ref": "color.on-surface-variant" },
+      "border-radius":    { "$ref": "shape.lg" },
+      "padding-x":        { "$ref": "spacing.3" },
+      "padding-y":        { "$ref": "spacing.1" },
+      "font-size":        { "$ref": "typography.fontSize.label-sm" },
+      "font-weight":      { "$ref": "typography.fontWeight.semibold" },
+      "letter-spacing":   { "$ref": "typography.letterSpacing.label" }
+    }
+  },
+
+  "texture": {
+    "$description": "Bespoke effects that break digital sterility.",
+    "noise": {
+      "svg-filter":       "url(#noise-filter)",
+      "opacity":          "0.035",
+      "frequency":        "0.65",
+      "$note":            "Apply as SVG feTurbulence or CSS background-image with a noise PNG at 3-5% opacity."
+    },
+    "washi-grain": {
+      "css":              "background-image: url('data:image/svg+xml,...'); background-size: 200px 200px; opacity: 0.04;",
+      "$note":            "Overlaid globally on all surfaces to mimic handmade washi paper grain."
+    }
+  },
+
+  "rules": {
+    "prohibitions": [
+      "No 1px solid borders to section UI areas. Use tonal shifts or negative space.",
+      "No horizontal dividers/rules in lists or cards.",
+      "No pure white (#FFFFFF) or pure black (#000000) in any surface.",
+      "No color gradients. Flat, matte tonal shifts only.",
+      "No dense UI. Never sacrifice whitespace to fit more on screen.",
+      "No loud animations. Minimum 300ms, ease-in-out, never linear.",
+      "No harsh drop shadows. Ambient light only (4-6% opacity, derived from on-surface)."
+    ],
+    "imperatives": [
+      "Embrace asymmetry. Offset headlines, place images off-center.",
+      "Use Stone Anchors: secondary (forest green) or tertiary (clay) for key focus points.",
+      "Prioritize the Void: if cluttered, remove rather than shrink.",
+      "Apply noise overlay globally to all surfaces (3-5% opacity).",
+      "Body line-height minimum 1.6, target 1.75.",
+      "Large headers: light weight. Small labels: semibold.",
+      "Floating elements: glassmorphism (surface at 80% opacity, blur 12px)."
+    ]
+  }
+}

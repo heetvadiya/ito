@@ -1,0 +1,10 @@
+{
+  "id": "ito",
+  "name": "Ito",
+  "version": "0.1.0",
+  "minAppVersion": "1.4.0",
+  "description": "Surfaces semantic connections across your notes, images, PDFs, audio, and video using multimodal AI embeddings. Your vault, understood.",
+  "author": "Heet",
+  "authorUrl": "https://github.com/heetvadiya",
+  "isDesktopOnly": true
+}
