@@ -65,6 +65,8 @@ Answer from the output.
 
 Now asking *"what do I know about knowledge management?"* makes Claude search your actual vault and answer from your own notes — not its training data.
 
+`ito` outputs structured markdown — headers, paths, tags, links, and full note content. LLM-friendly by design. No parsing, no preprocessing. The model reads it directly.
+
 ---
 
 Dark mode:
