@@ -81,11 +81,44 @@ One button in the panel adds `[[filename]]` to a `## Related` section at the bot
 
 ## Setup
 
-1. Install from Obsidian Community Plugins *(pending review)* or copy `main.js`, `manifest.json`, and `styles.css` into `.obsidian/plugins/ito/`.
-2. Enable the plugin.
-3. Go to **Settings → Ito** and paste your [Gemini API key](https://aistudio.google.com/app/apikey).
-4. Use **Test connection** to verify access.
-5. Ito will begin indexing your vault automatically.
+### From the Community Plugin Directory *(pending review)*
+
+1. Open Obsidian → **Settings → Community plugins → Browse**
+2. Search for **Ito** and install
+3. Enable the plugin
+4. Go to **Settings → Ito**, paste your [Gemini API key](https://aistudio.google.com/app/apikey)
+5. Click **Test connection** to verify
+6. Ito will begin indexing your vault automatically
+
+---
+
+### Manual Install (available now)
+
+**Requirements:** [Node.js](https://nodejs.org) 18+, [Git](https://git-scm.com)
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/heetvadiya/ito.git
+cd ito
+
+# 2. Install dependencies and build
+npm install
+npm run build
+```
+
+This produces `main.js` in the project root.
+
+```bash
+# 3. Copy the three plugin files into your vault
+cp main.js manifest.json styles.css /path/to/your/vault/.obsidian/plugins/ito/
+```
+
+Replace `/path/to/your/vault` with the actual path to your Obsidian vault. Create the `ito` folder if it doesn't exist.
+
+4. Open Obsidian → **Settings → Community plugins** → disable Safe mode if prompted → enable **Ito**
+5. Go to **Settings → Ito**, paste your [Gemini API key](https://aistudio.google.com/app/apikey)
+6. Click **Test connection** to verify
+7. Ito will begin indexing your vault automatically
 
 **Model used:** `gemini-embedding-2-preview`  
 **Supported files:** `.md`, `.txt`, `.png`, `.jpg`, `.jpeg`, `.webp`, `.pdf`, `.mp3`, `.wav`, `.m4a`, `.ogg`, `.flac`, `.mp4`, `.mov`, `.webm`
