@@ -1,20 +1,23 @@
-import Database from 'better-sqlite3';
+// sql-asm is the pure asm.js build — no WASM file required, works in Electron
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const initSqlJs = require('sql.js/dist/sql-asm.js');
+import type { Database, SqlJsStatic } from 'sql.js';
 import { join } from 'path';
-import { mkdirSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { EmbeddingRecord, Modality } from './types';
 
 const SCHEMA = `
   CREATE TABLE IF NOT EXISTS embeddings (
-    id              INTEGER PRIMARY KEY AUTOINCREMENT,
-    file_path       TEXT    NOT NULL,
-    file_hash       TEXT    NOT NULL,
-    modality        TEXT    NOT NULL,
-    chunk_index     INTEGER NOT NULL DEFAULT 0,
-    embedding       BLOB    NOT NULL,
-    summary         TEXT,
-    file_size_bytes INTEGER,
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    file_path        TEXT    NOT NULL,
+    file_hash        TEXT    NOT NULL,
+    modality         TEXT    NOT NULL,
+    chunk_index      INTEGER NOT NULL DEFAULT 0,
+    embedding        BLOB    NOT NULL,
+    summary          TEXT,
+    file_size_bytes  INTEGER,
     duration_seconds REAL,
-    indexed_at      INTEGER NOT NULL
+    indexed_at       INTEGER NOT NULL
   );
 
   CREATE UNIQUE INDEX IF NOT EXISTS idx_file_chunk
@@ -24,12 +27,12 @@ const SCHEMA = `
     ON embeddings(file_path);
 `;
 
-function encodeEmbedding(embedding: number[]): Buffer {
-  return Buffer.from(new Float32Array(embedding).buffer);
+function encodeEmbedding(embedding: number[]): Uint8Array {
+  return new Uint8Array(new Float32Array(embedding).buffer);
 }
 
-function decodeEmbedding(buffer: Buffer): number[] {
-  return Array.from(new Float32Array(buffer.buffer, buffer.byteOffset, buffer.length / 4));
+function decodeEmbedding(blob: Uint8Array): number[] {
+  return Array.from(new Float32Array(blob.buffer, blob.byteOffset, blob.byteLength / 4));
 }
 
 export interface StoredEmbedding {
@@ -43,17 +46,29 @@ export interface StoredEmbedding {
 }
 
 export class ItoStore {
-  private readonly db: Database.Database;
+  private db!: Database;
+  private readonly dbPath: string;
 
   constructor(pluginDir: string) {
     mkdirSync(pluginDir, { recursive: true });
-    this.db = new Database(join(pluginDir, 'ito.db'));
-    this.db.pragma('journal_mode = WAL');
-    this.db.exec(SCHEMA);
+    this.dbPath = join(pluginDir, 'ito.db');
+  }
+
+  // Must be called once before any other method
+  async init(): Promise<void> {
+    const SQL: SqlJsStatic = await initSqlJs();
+    if (existsSync(this.dbPath)) {
+      const fileBuffer = readFileSync(this.dbPath);
+      this.db = new SQL.Database(fileBuffer);
+    } else {
+      this.db = new SQL.Database();
+    }
+    this.db.run(SCHEMA);
+    this.persist();
   }
 
   upsert(record: EmbeddingRecord): void {
-    this.db.prepare(`
+    this.db.run(`
       INSERT INTO embeddings
         (file_path, file_hash, modality, chunk_index, embedding, summary,
          file_size_bytes, duration_seconds, indexed_at)
@@ -66,7 +81,7 @@ export class ItoStore {
         file_size_bytes  = excluded.file_size_bytes,
         duration_seconds = excluded.duration_seconds,
         indexed_at       = excluded.indexed_at
-    `).run(
+    `, [
       record.filePath,
       record.fileHash,
       record.modality,
@@ -76,84 +91,84 @@ export class ItoStore {
       record.fileSizeBytes ?? null,
       record.durationSeconds ?? null,
       Date.now(),
-    );
+    ]);
+    this.persist();
   }
 
   deleteFile(filePath: string): void {
-    this.db.prepare('DELETE FROM embeddings WHERE file_path = ?').run(filePath);
+    this.db.run('DELETE FROM embeddings WHERE file_path = ?', [filePath]);
+    this.persist();
   }
 
-  // All chunks are renamed atomically inside a single transaction
   renameFile(oldPath: string, newPath: string): void {
-    this.db.prepare(
-      'UPDATE embeddings SET file_path = ? WHERE file_path = ?'
-    ).run(newPath, oldPath);
+    this.db.run('UPDATE embeddings SET file_path = ? WHERE file_path = ?', [newPath, oldPath]);
+    this.persist();
   }
 
   getHash(filePath: string): string | null {
-    const row = this.db.prepare(
-      'SELECT file_hash FROM embeddings WHERE file_path = ? LIMIT 1'
-    ).get(filePath) as { file_hash: string } | undefined;
-    return row?.file_hash ?? null;
+    const result = this.db.exec(
+      'SELECT file_hash FROM embeddings WHERE file_path = ? LIMIT 1',
+      [filePath]
+    );
+    if (!result.length || !result[0].values.length) return null;
+    return result[0].values[0][0] as string;
   }
 
-  // Returns every stored embedding for query-time similarity computation
   getAllEmbeddings(): StoredEmbedding[] {
-    const rows = this.db.prepare(`
+    const result = this.db.exec(`
       SELECT file_path, modality, chunk_index, embedding,
              summary, file_size_bytes, duration_seconds
       FROM embeddings
-    `).all() as Array<{
-      file_path: string;
-      modality: string;
-      chunk_index: number;
-      embedding: Buffer;
-      summary: string | null;
-      file_size_bytes: number | null;
-      duration_seconds: number | null;
-    }>;
+    `);
+    if (!result.length) return [];
 
-    return rows.map(r => ({
-      filePath: r.file_path,
-      modality: r.modality as Modality,
-      chunkIndex: r.chunk_index,
-      embedding: decodeEmbedding(r.embedding),
-      summary: r.summary ?? undefined,
-      fileSizeBytes: r.file_size_bytes ?? undefined,
-      durationSeconds: r.duration_seconds ?? undefined,
+    return result[0].values.map(row => ({
+      filePath:        row[0] as string,
+      modality:        row[1] as Modality,
+      chunkIndex:      row[2] as number,
+      embedding:       decodeEmbedding(row[3] as Uint8Array),
+      summary:         row[4] as string | undefined ?? undefined,
+      fileSizeBytes:   row[5] as number | undefined ?? undefined,
+      durationSeconds: row[6] as number | undefined ?? undefined,
     }));
   }
 
   getAllPaths(): string[] {
-    const rows = this.db.prepare(
-      'SELECT DISTINCT file_path FROM embeddings'
-    ).all() as Array<{ file_path: string }>;
-    return rows.map(r => r.file_path);
+    const result = this.db.exec('SELECT DISTINCT file_path FROM embeddings');
+    if (!result.length) return [];
+    return result[0].values.map(row => row[0] as string);
   }
 
   getCount(): { total: number; byModality: Record<Modality, number> } {
-    const total = (this.db.prepare(
-      'SELECT COUNT(*) as n FROM embeddings'
-    ).get() as { n: number }).n;
+    const totalResult = this.db.exec('SELECT COUNT(*) FROM embeddings');
+    const total = totalResult.length ? (totalResult[0].values[0][0] as number) : 0;
 
-    const byModalityRows = this.db.prepare(
-      'SELECT modality, COUNT(*) as n FROM embeddings GROUP BY modality'
-    ).all() as Array<{ modality: string; n: number }>;
-
+    const byModalityResult = this.db.exec(
+      'SELECT modality, COUNT(*) FROM embeddings GROUP BY modality'
+    );
     const byModality: Record<string, number> = {};
-    for (const row of byModalityRows) byModality[row.modality] = row.n;
+    if (byModalityResult.length) {
+      for (const row of byModalityResult[0].values) {
+        byModality[row[0] as string] = row[1] as number;
+      }
+    }
 
-    return {
-      total,
-      byModality: byModality as Record<Modality, number>,
-    };
+    return { total, byModality: byModality as Record<Modality, number> };
   }
 
   clearAll(): void {
-    this.db.prepare('DELETE FROM embeddings').run();
+    this.db.run('DELETE FROM embeddings');
+    this.persist();
+  }
+
+  // Write in-memory DB back to disk
+  private persist(): void {
+    const data = this.db.export();
+    writeFileSync(this.dbPath, Buffer.from(data));
   }
 
   close(): void {
+    this.persist();
     this.db.close();
   }
 }

@@ -9,11 +9,11 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
-    "better-sqlite3": "^9.4.3"
+    "sql.js": "^1.14.1"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.8",
     "@types/node": "^20.0.0",
+    "@types/sql.js": "^1.4.11",
     "builtin-modules": "^3.3.0",
     "esbuild": "^0.20.0",
     "obsidian": "latest",

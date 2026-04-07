@@ -20,6 +20,7 @@ export default class ItoPlugin extends Plugin {
 
     const pluginDir = `${this.app.vault.configDir}/plugins/ito`;
     this.store = new ItoStore(pluginDir);
+    await this.store.init();
 
     this.embedder = new ItoEmbedder(
       this.settings.geminiApiKey,
