@@ -27,6 +27,12 @@ Ito's job is only to *resurface*. To bring back the forgotten thread. To place a
 The model finds candidates. You confirm connections.
 
 ---
+Dark mode:
+<img width="1576" height="959" alt="image" src="https://github.com/user-attachments/assets/05e19d26-a0e5-49da-9c2d-2f1a103fc4ee" />
+Light mode:
+<img width="1576" height="959" alt="image" src="https://github.com/user-attachments/assets/d1f3cb41-cfe7-4c2b-91a5-232006476159" />
+Settings Panel:
+<img width="1123" height="902" alt="image" src="https://github.com/user-attachments/assets/1db10f15-956f-48c7-93c0-a71fc291966a" />
 
 ## What Ito Does Not Do
 
