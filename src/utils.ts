@@ -77,28 +77,36 @@ export function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
+// All embeddable media extensions (PDFs handled separately)
+const EMBEDDABLE_EXTENSIONS = new Set([
+  // Images
+  '.png', '.jpg', '.jpeg', '.webp',
+  // Audio
+  '.mp3', '.wav', '.m4a', '.ogg', '.flac',
+  // Video
+  '.mp4', '.mov', '.webm',
+]);
 
-// Extract image file paths embedded in markdown content.
+// Extract embedded media file paths from markdown content.
 // Handles both ![[wikilink]] and ![alt](path) syntax.
-// Returns deduplicated list, capped at 6 (model limit per request).
-export function extractEmbeddedImagePaths(content: string): string[] {
+// Returns deduplicated list, capped at 6 (gemini-embedding-2-preview limit per request).
+export function extractEmbeddedMediaPaths(content: string): string[] {
   const paths: string[] = [];
 
-  // Obsidian wikilink embeds: ![[image.png]] or ![[subfolder/image.png]]
+  // Obsidian wikilink embeds: ![[file.mp3]] or ![[subfolder/video.mp4]]
   for (const match of content.matchAll(/!\[\[([^\]]+)\]\]/g)) {
-    const raw = match[1].split('|')[0].trim(); // strip aliases like ![[img.png|200]]
+    const raw = match[1].split('|')[0].trim(); // strip display aliases like ![[img.png|200]]
     const ext = '.' + raw.split('.').pop()?.toLowerCase();
-    if (IMAGE_EXTENSIONS.has(ext)) paths.push(raw);
+    if (EMBEDDABLE_EXTENSIONS.has(ext)) paths.push(raw);
   }
 
   // Standard markdown embeds: ![alt](path)
   for (const match of content.matchAll(/!\[.*?\]\(([^)]+)\)/g)) {
     const raw = match[1].trim();
     const ext = '.' + raw.split('.').pop()?.toLowerCase();
-    if (IMAGE_EXTENSIONS.has(ext)) paths.push(raw);
+    if (EMBEDDABLE_EXTENSIONS.has(ext)) paths.push(raw);
   }
 
-  // Deduplicate and cap at 6 (gemini-embedding-2-preview limit)
+  // Deduplicate and cap at 6 (model limit)
   return [...new Set(paths)].slice(0, 6);
 }

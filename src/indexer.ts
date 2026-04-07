@@ -3,7 +3,7 @@ import { ItoStore } from './store';
 import { ItoEmbedder } from './embedder';
 import { ModalityRegistry } from './modality';
 import { IndexPolicy, ItoAuthError, ItoFileTooLargeError, ItoNetworkError, ItoQuotaError } from './types';
-import { chunkMarkdown, computeHash, extractEmbeddedImagePaths, sleep } from './utils';
+import { chunkMarkdown, computeHash, extractEmbeddedMediaPaths, sleep } from './utils';
 
 export const RATE_LIMIT_MS_LIGHT = 300;
 export const RATE_LIMIT_MS_HEAVY = 600;
@@ -73,21 +73,21 @@ export class ItoIndexer {
       const chunks = chunkMarkdown(content);
       this.store.deleteFile(file.path);
 
-      // Resolve images embedded in this note
-      const embeddedRefs = extractEmbeddedImagePaths(content);
-      const resolvedImages = await this.resolveImages(file.path, embeddedRefs);
+      // Resolve all embedded media (images, audio, video) in this note
+      const embeddedRefs = extractEmbeddedMediaPaths(content);
+      const resolvedMedia = await this.resolveMedia(file.path, embeddedRefs);
 
-      // Register these image paths so they're skipped when encountered as standalone files
+      // Register these paths so they're skipped when encountered as standalone files
       for (const ref of embeddedRefs) {
-        const resolved = this.resolveImagePath(file.path, ref);
+        const resolved = this.resolveMediaPath(file.path, ref);
         if (resolved) this.embeddedImagePaths.add(resolved);
       }
 
       for (let i = 0; i < chunks.length; i++) {
-        // Images only attached to the first chunk to keep subsequent chunks light
-        const chunkImages = i === 0 ? resolvedImages : [];
-        const chunkPayload = chunkImages.length > 0
-          ? { type: 'composite' as const, textContent: chunks[i], images: chunkImages }
+        // Media only attached to the first chunk — keeps subsequent chunks lightweight
+        const chunkMedia = i === 0 ? resolvedMedia : [];
+        const chunkPayload = chunkMedia.length > 0
+          ? { type: 'composite' as const, textContent: chunks[i], mediaParts: chunkMedia }
           : { type: 'text' as const, content: chunks[i] };
 
         const vector = await this.embedder.embed(chunkPayload);
@@ -104,8 +104,9 @@ export class ItoIndexer {
         if (i < chunks.length - 1) await sleep(RATE_LIMIT_MS_LIGHT);
       }
     } else {
-      // Skip images that are already embedded inside a note
-      if (modality.modality === 'image' && this.embeddedImagePaths.has(file.path)) {
+      // Skip media files already embedded inside a note (image, audio, video)
+      const isEmbeddableMedia = ['image', 'audio', 'video'].includes(modality.modality);
+      if (isEmbeddableMedia && this.embeddedImagePaths.has(file.path)) {
         console.log(`Ito: skipping standalone index of ${file.path} — embedded in a note`);
         return;
       }
@@ -254,44 +255,44 @@ export class ItoIndexer {
     console.error(`Ito: unexpected error indexing ${filePath}`, err);
   }
 
-  // Resolve an image reference from a note to an absolute vault path
-  private resolveImagePath(notePath: string, imageRef: string): string | null {
-    // If it's already an absolute-looking path, use as-is
-    if (!imageRef.includes('/')) {
-      // Bare filename — search vault for it
-      const found = this.app.vault.getFiles().find(f => f.name === imageRef);
+  // Resolve a media reference from a note to an absolute vault path
+  private resolveMediaPath(notePath: string, mediaRef: string): string | null {
+    if (!mediaRef.includes('/')) {
+      const found = this.app.vault.getFiles().find(f => f.name === mediaRef);
       return found?.path ?? null;
     }
-    // Relative path — resolve from note's folder
     const noteDir = notePath.split('/').slice(0, -1).join('/');
-    const resolved = noteDir ? `${noteDir}/${imageRef}` : imageRef;
+    const resolved = noteDir ? `${noteDir}/${mediaRef}` : mediaRef;
     return this.app.vault.getFileByPath(resolved)?.path ?? null;
   }
 
-  // Load image files referenced in a note and return base64-encoded payloads
-  private async resolveImages(
+  // Load all media files (image, audio, video) embedded in a note
+  private async resolveMedia(
     notePath: string,
     refs: string[],
   ): Promise<Array<{ mimeType: string; base64: string }>> {
     const results: Array<{ mimeType: string; base64: string }> = [];
     for (const ref of refs) {
-      const resolvedPath = this.resolveImagePath(notePath, ref);
+      const resolvedPath = this.resolveMediaPath(notePath, ref);
       if (!resolvedPath) continue;
 
-      const imageFile = this.app.vault.getFileByPath(resolvedPath);
-      if (!imageFile) continue;
+      const mediaFile = this.app.vault.getFileByPath(resolvedPath);
+      if (!mediaFile) continue;
 
-      const imgModality = ModalityRegistry.get(resolvedPath);
-      if (!imgModality || imgModality.modality !== 'image') continue;
+      const mediaModality = ModalityRegistry.get(resolvedPath);
+      if (!mediaModality) continue;
+
+      // PDFs handled separately — skip here
+      if (mediaModality.modality === 'pdf') continue;
 
       try {
-        const imgBuffer = await this.app.vault.readBinary(imageFile);
-        const payload = imgModality.encode(imgBuffer, imageFile.name);
+        const mediaBuffer = await this.app.vault.readBinary(mediaFile);
+        const payload = mediaModality.encode(mediaBuffer, mediaFile.name);
         if (payload.type === 'inline') {
           results.push({ mimeType: payload.mimeType, base64: payload.base64 });
         }
       } catch {
-        console.log(`Ito: could not load embedded image ${resolvedPath}`);
+        console.log(`Ito: could not load embedded media ${resolvedPath}`);
       }
     }
     return results;

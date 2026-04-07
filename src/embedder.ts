@@ -48,8 +48,8 @@ export class ItoEmbedder {
         contents = {
           parts: [
             { text: wrapDocument(payload.textContent) },
-            ...payload.images.map(img => ({
-              inlineData: { mimeType: img.mimeType, data: img.base64 },
+            ...payload.mediaParts.map(part => ({
+              inlineData: { mimeType: part.mimeType, data: part.base64 },
             })),
           ],
         };
