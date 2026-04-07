@@ -109,7 +109,7 @@ export default class ItoPlugin extends Plugin {
 
         const notice = new Notice('Ito: finding similar content…', 0);
         try {
-          const vector = await this.embedder.embed({ type: 'text', content: selected });
+          const vector = await this.embedder.embed({ type: 'text', content: selected, role: 'query' });
           const results = this.vectorIndex.query(
             vector,
             this.settings.similarityThreshold,

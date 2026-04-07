@@ -13,7 +13,7 @@ export type FileIndexState =
   | 'skipped';
 
 export type EmbedPayload =
-  | { type: 'text'; content: string }
+  | { type: 'text'; content: string; role?: 'document' | 'query' }
   | { type: 'inline'; mimeType: string; base64: string };
 
 export interface EmbeddingRecord {
@@ -89,3 +89,4 @@ export class ItoNetworkError extends Error {
     this.name = 'ItoNetworkError';
   }
 }
+
