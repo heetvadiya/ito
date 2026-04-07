@@ -46,9 +46,15 @@ export function chunkMarkdown(content: string): string[] {
     }
   }
 
-  return chunks
-    .filter(c => c.trim().length >= MIN_CHUNK_CHARS)
-    .slice(0, MAX_CHUNKS);
+  const filtered = chunks.filter(c => c.trim().length >= MIN_CHUNK_CHARS);
+
+  // If all chunks were filtered out but the content itself is non-empty,
+  // embed the whole content as a single chunk so short notes still get indexed
+  if (filtered.length === 0 && content.trim().length > 0) {
+    return [content.trim()];
+  }
+
+  return filtered.slice(0, MAX_CHUNKS);
 }
 
 export function extractExcerpt(content: string, maxLength = 120): string {

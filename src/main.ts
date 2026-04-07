@@ -14,6 +14,7 @@ export default class ItoPlugin extends Plugin {
   embedder!: ItoEmbedder;
   indexer!: ItoIndexer;
   vectorIndex!: ItoVectorIndex;
+  private statusBar!: HTMLElement;
 
   async onload(): Promise<void> {
     await this.loadSettings();
@@ -36,9 +37,12 @@ export default class ItoPlugin extends Plugin {
       () => this.settings,
     );
 
-    // Propagate indexer events to the open panel
+    // Propagate indexer events to the open panel and status bar
     this.indexer.on(event => {
-      if (event.type === 'file-indexed') this.refreshPanel();
+      if (event.type === 'file-indexed') {
+        this.refreshPanel();
+        this.updateStatusBar();
+      }
     });
 
     // Register panel view
@@ -46,6 +50,10 @@ export default class ItoPlugin extends Plugin {
       ITO_PANEL_VIEW_TYPE,
       leaf => new ItoPanel(leaf, this),
     );
+
+    // Status bar — always-visible indexed file count
+    this.statusBar = this.addStatusBarItem();
+    this.updateStatusBar();
 
     // Ribbon icon
     this.addRibbonIcon('git-branch', 'Ito — related files', () => {
@@ -182,6 +190,11 @@ export default class ItoPlugin extends Plugin {
     if (panels.length > 0 && activeFile) {
       (panels[0].view as ItoPanel).refresh(activeFile);
     }
+  }
+
+  private updateStatusBar(): void {
+    const { total } = this.store.getCount();
+    this.statusBar.setText(`Ito: ${total} indexed`);
   }
 
   private async addBacklinkToActiveFile(targetPath: string): Promise<void> {
