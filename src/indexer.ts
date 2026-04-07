@@ -3,7 +3,7 @@ import { ItoStore } from './store';
 import { ItoEmbedder } from './embedder';
 import { ModalityRegistry } from './modality';
 import { IndexPolicy, ItoAuthError, ItoFileTooLargeError, ItoNetworkError, ItoQuotaError } from './types';
-import { chunkMarkdown, computeHash, sleep } from './utils';
+import { chunkMarkdown, computeHash, extractEmbeddedImagePaths, sleep } from './utils';
 
 export const RATE_LIMIT_MS_LIGHT = 300;
 export const RATE_LIMIT_MS_HEAVY = 600;
@@ -68,15 +68,28 @@ export class ItoIndexer {
 
     if (this.store.getHash(file.path) === hash) return;
 
-    const payload = modality.encode(buffer, file.name);
-
     if (modality.modality === 'text') {
       const content = new TextDecoder().decode(buffer);
       const chunks = chunkMarkdown(content);
       this.store.deleteFile(file.path);
 
+      // Resolve images embedded in this note
+      const embeddedRefs = extractEmbeddedImagePaths(content);
+      const resolvedImages = await this.resolveImages(file.path, embeddedRefs);
+
+      // Register these image paths so they're skipped when encountered as standalone files
+      for (const ref of embeddedRefs) {
+        const resolved = this.resolveImagePath(file.path, ref);
+        if (resolved) this.embeddedImagePaths.add(resolved);
+      }
+
       for (let i = 0; i < chunks.length; i++) {
-        const chunkPayload = { type: 'text' as const, content: chunks[i] };
+        // Images only attached to the first chunk to keep subsequent chunks light
+        const chunkImages = i === 0 ? resolvedImages : [];
+        const chunkPayload = chunkImages.length > 0
+          ? { type: 'composite' as const, textContent: chunks[i], images: chunkImages }
+          : { type: 'text' as const, content: chunks[i] };
+
         const vector = await this.embedder.embed(chunkPayload);
         const summary = modality.summarise(chunks[i], file.name);
         this.store.upsert({
@@ -88,18 +101,18 @@ export class ItoIndexer {
           summary,
           fileSizeBytes: file.stat.size,
         });
-        if (i < chunks.length - 1) {
-          await sleep(RATE_LIMIT_MS_LIGHT);
-        }
+        if (i < chunks.length - 1) await sleep(RATE_LIMIT_MS_LIGHT);
       }
     } else {
+      // Skip images that are already embedded inside a note
+      if (modality.modality === 'image' && this.embeddedImagePaths.has(file.path)) {
+        console.log(`Ito: skipping standalone index of ${file.path} — embedded in a note`);
+        return;
+      }
+
+      const payload = modality.encode(buffer, file.name);
       const vector = await this.embedder.embed(payload);
-      const summary = modality.summarise(
-        buffer,
-        file.name,
-        file.stat.size,
-        undefined,
-      );
+      const summary = modality.summarise(buffer, file.name, file.stat.size, undefined);
       this.store.upsert({
         filePath: file.path,
         fileHash: hash,
@@ -122,6 +135,10 @@ export class ItoIndexer {
   renameFile(oldPath: string, newFile: TFile): void {
     this.store.renameFile(oldPath, newFile.path);
   }
+
+  // Paths of images that are embedded inside markdown notes.
+  // These are indexed as part of their parent note, not as standalone files.
+  private embeddedImagePaths = new Set<string>();
 
   async reconcile(): Promise<void> {
     const policy = this.getPolicy();
@@ -235,6 +252,49 @@ export class ItoIndexer {
     const msg = err instanceof Error ? err.message : String(err);
     new Notice(`Ito: error indexing ${filePath.split('/').pop()} — ${msg}`);
     console.error(`Ito: unexpected error indexing ${filePath}`, err);
+  }
+
+  // Resolve an image reference from a note to an absolute vault path
+  private resolveImagePath(notePath: string, imageRef: string): string | null {
+    // If it's already an absolute-looking path, use as-is
+    if (!imageRef.includes('/')) {
+      // Bare filename — search vault for it
+      const found = this.app.vault.getFiles().find(f => f.name === imageRef);
+      return found?.path ?? null;
+    }
+    // Relative path — resolve from note's folder
+    const noteDir = notePath.split('/').slice(0, -1).join('/');
+    const resolved = noteDir ? `${noteDir}/${imageRef}` : imageRef;
+    return this.app.vault.getFileByPath(resolved)?.path ?? null;
+  }
+
+  // Load image files referenced in a note and return base64-encoded payloads
+  private async resolveImages(
+    notePath: string,
+    refs: string[],
+  ): Promise<Array<{ mimeType: string; base64: string }>> {
+    const results: Array<{ mimeType: string; base64: string }> = [];
+    for (const ref of refs) {
+      const resolvedPath = this.resolveImagePath(notePath, ref);
+      if (!resolvedPath) continue;
+
+      const imageFile = this.app.vault.getFileByPath(resolvedPath);
+      if (!imageFile) continue;
+
+      const imgModality = ModalityRegistry.get(resolvedPath);
+      if (!imgModality || imgModality.modality !== 'image') continue;
+
+      try {
+        const imgBuffer = await this.app.vault.readBinary(imageFile);
+        const payload = imgModality.encode(imgBuffer, imageFile.name);
+        if (payload.type === 'inline') {
+          results.push({ mimeType: payload.mimeType, base64: payload.base64 });
+        }
+      } catch {
+        console.log(`Ito: could not load embedded image ${resolvedPath}`);
+      }
+    }
+    return results;
   }
 
   private shouldIndex(file: TFile): boolean {

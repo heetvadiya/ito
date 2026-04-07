@@ -76,3 +76,29 @@ export function extractExcerpt(content: string, maxLength = 120): string {
 export function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
+
+// Extract image file paths embedded in markdown content.
+// Handles both ![[wikilink]] and ![alt](path) syntax.
+// Returns deduplicated list, capped at 6 (model limit per request).
+export function extractEmbeddedImagePaths(content: string): string[] {
+  const paths: string[] = [];
+
+  // Obsidian wikilink embeds: ![[image.png]] or ![[subfolder/image.png]]
+  for (const match of content.matchAll(/!\[\[([^\]]+)\]\]/g)) {
+    const raw = match[1].split('|')[0].trim(); // strip aliases like ![[img.png|200]]
+    const ext = '.' + raw.split('.').pop()?.toLowerCase();
+    if (IMAGE_EXTENSIONS.has(ext)) paths.push(raw);
+  }
+
+  // Standard markdown embeds: ![alt](path)
+  for (const match of content.matchAll(/!\[.*?\]\(([^)]+)\)/g)) {
+    const raw = match[1].trim();
+    const ext = '.' + raw.split('.').pop()?.toLowerCase();
+    if (IMAGE_EXTENSIONS.has(ext)) paths.push(raw);
+  }
+
+  // Deduplicate and cap at 6 (gemini-embedding-2-preview limit)
+  return [...new Set(paths)].slice(0, 6);
+}

@@ -14,7 +14,9 @@ export type FileIndexState =
 
 export type EmbedPayload =
   | { type: 'text'; content: string; role?: 'document' | 'query' }
-  | { type: 'inline'; mimeType: string; base64: string };
+  | { type: 'inline'; mimeType: string; base64: string }
+  // Composite: text chunk + embedded images sent together → one aggregated embedding
+  | { type: 'composite'; textContent: string; images: Array<{ mimeType: string; base64: string }> };
 
 export interface EmbeddingRecord {
   filePath: string;

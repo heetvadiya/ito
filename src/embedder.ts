@@ -35,9 +35,25 @@ export class ItoEmbedder {
 
   async embed(payload: EmbedPayload): Promise<number[]> {
     try {
-      const contents = payload.type === 'text'
-        ? (payload.role === 'query' ? wrapQuery(payload.content) : wrapDocument(payload.content))
-        : [{ inlineData: { mimeType: payload.mimeType, data: payload.base64 } }];
+      let contents: unknown;
+
+      if (payload.type === 'text') {
+        contents = payload.role === 'query'
+          ? wrapQuery(payload.content)
+          : wrapDocument(payload.content);
+      } else if (payload.type === 'inline') {
+        contents = [{ inlineData: { mimeType: payload.mimeType, data: payload.base64 } }];
+      } else {
+        // Composite: text + images → one aggregated embedding
+        contents = {
+          parts: [
+            { text: wrapDocument(payload.textContent) },
+            ...payload.images.map(img => ({
+              inlineData: { mimeType: img.mimeType, data: img.base64 },
+            })),
+          ],
+        };
+      }
 
       const response = await this.client.models.embedContent({
         model: MODEL_NAME,
