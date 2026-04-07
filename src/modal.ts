@@ -25,37 +25,41 @@ export class ItoResultsModal extends Modal {
       return;
     }
 
-    const list = contentEl.createDiv('ito-result-list');
+    const tiles = contentEl.createDiv('ito-tiles');
 
     for (const neighbor of this.results) {
-      const row = list.createDiv('ito-result-row');
+      const tile = tiles.createDiv('ito-tile');
 
-      const nameEl = row.createEl('button', {
-        text: neighbor.filePath.split('/').pop()?.replace(/\..*$/, '') ?? neighbor.filePath,
-        cls: 'ito-file-name',
-      });
-      nameEl.addEventListener('click', () => {
+      const top = tile.createDiv('ito-tile-top');
+      const name = neighbor.filePath.split('/').pop()?.replace(/\.[^.]+$/, '') ?? neighbor.filePath;
+      const titleEl = top.createEl('button', { text: name, cls: 'ito-tile-title' });
+      titleEl.addEventListener('click', () => {
         this.app.workspace.openLinkText(neighbor.filePath, '', false);
         this.close();
       });
-
-      const meta = row.createDiv('ito-result-meta');
-      meta.createEl('span', {
-        text: this.modalityLabel(neighbor.modality),
-        cls: `ito-badge ito-badge--${neighbor.modality}`,
-      });
-      meta.createEl('span', {
+      top.createEl('span', {
         text: `${Math.round(neighbor.similarity * 100)}%`,
-        cls: 'ito-similarity',
+        cls: 'ito-tile-score',
       });
 
       if (neighbor.summary) {
-        row.createEl('p', { text: neighbor.summary, cls: 'ito-excerpt' });
+        const snippet = tile.createDiv('ito-tile-snippet');
+        snippet.createEl('span', { text: 'matched content', cls: 'ito-snippet-label' });
+        snippet.createEl('p', { text: neighbor.summary, cls: 'ito-snippet-text' });
       }
 
-      const backlinkBtn = row.createEl('button', { text: 'Add as backlink', cls: 'ito-backlink-btn' });
-      backlinkBtn.addEventListener('click', async () => {
+      const footer = tile.createDiv('ito-tile-footer');
+      footer.createEl('span', {
+        text: this.modalityLabel(neighbor.modality),
+        cls: `ito-badge ito-badge--${neighbor.modality}`,
+      });
+
+      const linkBtn = footer.createEl('button', { text: '+ Link', cls: 'ito-btn-link' });
+      linkBtn.addEventListener('click', async () => {
         await this.onAddBacklink(neighbor.filePath);
+        linkBtn.setText('Linked ✓');
+        linkBtn.addClass('ito-btn-link--done');
+        linkBtn.disabled = true;
         this.close();
       });
     }

@@ -1,296 +1,365 @@
-/* ── Ito — Art of Ma Design System ──────────────────────────────────────────
-   Rooted in Ma (negative space), Wabi-Sabi (textured imperfection),
-   and Kanso (simplicity). No 1px borders. No gradients. No pure black.
+/* ── Ito — Art of Ma ─────────────────────────────────────────────────────────
+   Earth tones. No borders. No gradients. No pure black.
    Separation through tonal shifts and breathing room.
-   ──────────────────────────────────────────────────────────────────────── */
+   ─────────────────────────────────────────────────────────────────────────── */
 
 .theme-light, .theme-dark {
-  --ito-surface:              #feffd7;
-  --ito-surface-dim:          #f5f6cc;
-  --ito-surface-container:    #f6f4e8;
+  --ito-surface:               #feffd7;
+  --ito-surface-dim:           #f5f6cc;
+  --ito-surface-container:     #f6f4e8;
   --ito-surface-container-low: #faf9ed;
-  --ito-surface-container-high: #f0ede0;
-  --ito-surface-container-highest: #ebe9db;
-  --ito-surface-bright:       #fffff3;
+  --ito-surface-container-high:#f0ede0;
+  --ito-surface-highest:       #ebe9db;
 
-  --ito-on-surface:           #38382f;
-  --ito-on-surface-variant:   #5c5b50;
-  --ito-on-surface-muted:     #8a8974;
+  --ito-on-surface:            #38382f;
+  --ito-on-surface-2:          #5c5b50;
+  --ito-on-surface-3:          #8a8974;
 
-  --ito-primary:              #3d4a35;
-  --ito-primary-container:    #dee3e6;
-  --ito-on-primary-container: #2e3828;
+  --ito-primary:               #3d4a35;
+  --ito-primary-container:     #dee3e6;
+  --ito-on-primary-container:  #2e3828;
 
-  --ito-secondary:            #5d6758;
-  --ito-tertiary:             #8b6e4e;
-  --ito-tertiary-container:   #e8ddd0;
+  --ito-secondary:             #5d6758;
+  --ito-tertiary:              #8b6e4e;
+  --ito-tertiary-container:    #e8ddd0;
 
-  --ito-outline-variant:      rgba(187, 186, 173, 0.15);
+  --ito-shadow: 0 2px 12px -2px rgba(56,56,47,0.07), 0 1px 4px -1px rgba(56,56,47,0.04);
+  --ito-shadow-hover: 0 4px 20px -4px rgba(56,56,47,0.10), 0 2px 8px -2px rgba(56,56,47,0.06);
 
-  /* elevation: ambient only, derived from on-surface, never pure black */
-  --ito-shadow-1: 0 2px 8px -2px rgba(56,56,47,0.04), 0 1px 3px -1px rgba(56,56,47,0.03);
-  --ito-shadow-2: 0 4px 16px -4px rgba(56,56,47,0.05), 0 2px 6px -2px rgba(56,56,47,0.04);
+  --ito-radius: 10px;
+  --ito-radius-sm: 6px;
+  --ito-radius-pill: 9999px;
 
-  /* shape: stone-cut, minimal roundness */
-  --ito-radius-sm:   0.125rem;
-  --ito-radius-md:   0.25rem;
-  --ito-radius-full: 9999px;
+  --ito-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ito-duration: 180ms;
 
-  /* motion: slow, natural */
-  --ito-duration-fast: 150ms;
-  --ito-duration-base: 300ms;
-  --ito-ease: cubic-bezier(0.45, 0, 0.55, 1);
-
-  /* typography */
-  --ito-font-display: 'Noto Serif', 'Georgia', serif;
-  --ito-font-ui:      'Manrope', 'Inter', sans-serif;
+  --ito-font-serif: 'Noto Serif', Georgia, serif;
+  --ito-font-sans: 'Manrope', 'Inter', system-ui, sans-serif;
 }
 
-/* ── Panel container ─────────────────────────────────────────────────────── */
+/* ── Panel shell ─────────────────────────────────────────────────────────── */
 
 .ito-panel {
-  background: var(--ito-surface-container);
-  font-family: var(--ito-font-ui);
+  font-family: var(--ito-font-sans);
   color: var(--ito-on-surface);
+  background: var(--ito-surface-container);
   height: 100%;
   overflow-y: auto;
-  padding: 0;
-  /* Subtle noise grain — breaks digital sterility */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ito-surface-highest) transparent;
+  /* Subtle paper grain */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
-/* ── Panel header ────────────────────────────────────────────────────────── */
+/* ── Header ──────────────────────────────────────────────────────────────── */
 
-.ito-panel-header {
+.ito-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1.25rem 0.75rem;
+  padding: 18px 16px 10px;
   position: sticky;
   top: 0;
   background: var(--ito-surface-container);
   z-index: 10;
+  /* Grain on sticky header too */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
 }
 
-.ito-panel-title {
-  font-family: var(--ito-font-display);
-  font-size: 0.875rem;
+.ito-header-title {
+  font-family: var(--ito-font-serif);
+  font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.06em;
-  color: var(--ito-on-surface-variant);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--ito-on-surface-3);
 }
 
-.ito-icon-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--ito-on-surface-muted);
-  padding: 0.25rem;
-  border-radius: var(--ito-radius-sm);
+.ito-header-actions {
   display: flex;
   align-items: center;
-  transition: color var(--ito-duration-fast) var(--ito-ease);
-  box-shadow: none;
+  gap: 4px;
 }
 
-.ito-icon-btn:hover {
+.ito-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-radius: var(--ito-radius-sm);
+  color: var(--ito-on-surface-3);
+  cursor: pointer;
+  padding: 0;
+  box-shadow: none;
+  transition: background var(--ito-duration) var(--ito-ease),
+              color var(--ito-duration) var(--ito-ease);
+}
+
+.ito-btn-icon:hover {
+  background: var(--ito-surface-highest);
   color: var(--ito-on-surface);
 }
 
 /* ── Threshold slider ────────────────────────────────────────────────────── */
 
-.ito-slider-wrap {
-  padding: 0 1.25rem 1rem;
+.ito-slider-row {
+  padding: 4px 16px 14px;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 6px;
 }
 
 .ito-slider-label {
-  font-size: 0.75rem;
-  color: var(--ito-on-surface-muted);
-  letter-spacing: 0.04em;
+  font-size: 11px;
+  color: var(--ito-on-surface-3);
+  letter-spacing: 0.02em;
 }
 
-.ito-threshold-slider {
-  width: 100%;
+.ito-slider-label strong {
+  color: var(--ito-secondary);
+  font-weight: 600;
+}
+
+.ito-slider {
+  -webkit-appearance: none;
   appearance: none;
-  height: 2px;
-  background: var(--ito-surface-container-highest);
-  border-radius: var(--ito-radius-full);
+  width: 100%;
+  height: 3px;
+  background: var(--ito-surface-highest);
+  border-radius: var(--ito-radius-pill);
   outline: none;
   cursor: pointer;
-  transition: background var(--ito-duration-fast) var(--ito-ease);
 }
 
-.ito-threshold-slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 12px;
-  height: 12px;
+.ito-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--ito-secondary);
   cursor: pointer;
-  transition: transform var(--ito-duration-fast) var(--ito-ease);
+  box-shadow: 0 1px 4px rgba(56,56,47,0.2);
+  transition: transform var(--ito-duration) var(--ito-ease);
 }
 
-.ito-threshold-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.3);
+.ito-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
 }
 
-/* ── Result list ─────────────────────────────────────────────────────────── */
+/* ── Tiles list ──────────────────────────────────────────────────────────── */
 
-.ito-result-list {
-  padding: 0 0.75rem 1.5rem;
+.ito-tiles {
+  padding: 2px 10px 20px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
 }
 
-/* ── Result row ──────────────────────────────────────────────────────────── */
+/* ── Tile ────────────────────────────────────────────────────────────────── */
 
-.ito-result-row {
-  padding: 0.875rem 0.5rem;
-  border-radius: var(--ito-radius-sm);
-  transition: background var(--ito-duration-fast) var(--ito-ease);
+.ito-tile {
+  background: var(--ito-surface-container-low);
+  border-radius: var(--ito-radius);
+  padding: 13px 14px 11px;
+  box-shadow: var(--ito-shadow);
+  transition: background var(--ito-duration) var(--ito-ease),
+              box-shadow var(--ito-duration) var(--ito-ease),
+              transform var(--ito-duration) var(--ito-ease);
   cursor: default;
 }
 
-.ito-result-row:hover {
-  background: var(--ito-surface-container-low);
+.ito-tile:hover {
+  background: var(--ito-surface-container-high);
+  box-shadow: var(--ito-shadow-hover);
+  transform: translateY(-1px);
 }
 
-/* No dividers — space itself is the separator (Ma principle) */
+/* ── Tile top row ────────────────────────────────────────────────────────── */
 
-.ito-file-name {
+.ito-tile-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ito-tile-title {
+  font-family: var(--ito-font-serif);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--ito-on-surface);
   background: transparent;
   border: none;
-  cursor: pointer;
-  font-family: var(--ito-font-ui);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--ito-on-surface);
   padding: 0;
   text-align: left;
-  width: 100%;
+  cursor: pointer;
   line-height: 1.4;
-  transition: color var(--ito-duration-fast) var(--ito-ease);
+  flex: 1;
   box-shadow: none;
+  transition: color var(--ito-duration) var(--ito-ease);
 }
 
-.ito-file-name:hover {
+.ito-tile-title:hover {
   color: var(--ito-secondary);
 }
 
-.ito-result-meta {
+.ito-tile-score {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ito-secondary);
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.85;
+}
+
+/* ── Matched content snippet ─────────────────────────────────────────────── */
+
+.ito-tile-snippet {
+  margin-bottom: 10px;
+}
+
+.ito-snippet-label {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ito-on-surface-3);
+  margin-bottom: 3px;
+}
+
+.ito-snippet-text {
+  font-size: 12px;
+  color: var(--ito-on-surface-2);
+  line-height: 1.65;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Tile footer ─────────────────────────────────────────────────────────── */
+
+.ito-tile-footer {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.375rem;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
 }
 
 /* ── Modality badges ─────────────────────────────────────────────────────── */
 
 .ito-badge {
-  font-size: 0.6875rem;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  padding: 0.125rem 0.5rem;
-  border-radius: var(--ito-radius-full);
-  line-height: 1.4;
+  padding: 2px 7px;
+  border-radius: var(--ito-radius-pill);
+  line-height: 1.5;
+  flex-shrink: 0;
 }
 
-.ito-badge--text  { background: var(--ito-surface-container-highest); color: var(--ito-on-surface-variant); }
-.ito-badge--image { background: var(--ito-tertiary-container);        color: var(--ito-tertiary); }
-.ito-badge--pdf   { background: var(--ito-primary-container);         color: var(--ito-on-primary-container); }
-.ito-badge--audio { background: #dce4d8;                              color: #1e2b1a; }
-.ito-badge--video { background: #e4dce4;                              color: #2b1a2b; }
+.ito-badge--text  { background: var(--ito-surface-highest);    color: var(--ito-on-surface-2); }
+.ito-badge--image { background: var(--ito-tertiary-container);  color: var(--ito-tertiary); }
+.ito-badge--pdf   { background: var(--ito-primary-container);   color: var(--ito-on-primary-container); }
+.ito-badge--audio { background: #dce4d8; color: #2a3d26; }
+.ito-badge--video { background: #ddd8e4; color: #2e2840; }
 
-.ito-similarity {
-  font-size: 0.75rem;
+/* ── Link button ─────────────────────────────────────────────────────────── */
+
+.ito-btn-link {
+  font-family: var(--ito-font-sans);
+  font-size: 11px;
   font-weight: 600;
-  color: var(--ito-secondary);
-  letter-spacing: 0.02em;
-}
-
-/* ── Excerpt ─────────────────────────────────────────────────────────────── */
-
-.ito-excerpt {
-  font-size: 0.8125rem;
-  color: var(--ito-on-surface-variant);
-  line-height: 1.6;
-  margin: 0.375rem 0 0;
-  /* Clamp to 2 lines — respects Ma, no truncation ellipsis needed */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* ── Backlink button ─────────────────────────────────────────────────────── */
-
-.ito-backlink-btn {
-  margin-top: 0.5rem;
-  background: transparent;
+  letter-spacing: 0.04em;
+  color: var(--ito-on-surface-2);
+  background: var(--ito-surface-highest);
   border: none;
-  font-size: 0.75rem;
-  color: var(--ito-on-surface-muted);
+  border-radius: var(--ito-radius-sm);
+  padding: 4px 10px;
   cursor: pointer;
-  padding: 0;
-  letter-spacing: 0.02em;
-  transition: color var(--ito-duration-fast) var(--ito-ease);
   box-shadow: none;
+  transition: background var(--ito-duration) var(--ito-ease),
+              color var(--ito-duration) var(--ito-ease);
+  white-space: nowrap;
 }
 
-.ito-backlink-btn:hover {
-  color: var(--ito-secondary);
+.ito-btn-link:hover {
+  background: var(--ito-primary-container);
+  color: var(--ito-on-primary-container);
 }
 
-/* ── State messages ──────────────────────────────────────────────────────── */
+.ito-btn-link--done {
+  background: #dce4d8;
+  color: #2a3d26;
+  cursor: default;
+}
+
+/* ── State / empty ───────────────────────────────────────────────────────── */
+
+.ito-state-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: 24px 20px;
+}
 
 .ito-state {
-  padding: 2rem 1.25rem;
-  font-size: 0.875rem;
-  color: var(--ito-on-surface-muted);
-  line-height: 1.75;
+  font-size: 12.5px;
+  color: var(--ito-on-surface-3);
+  line-height: 1.7;
   text-align: center;
+  margin: 0;
 }
 
 .ito-empty {
-  font-size: 0.875rem;
-  color: var(--ito-on-surface-muted);
-  line-height: 1.75;
+  font-size: 12px;
+  color: var(--ito-on-surface-3);
+  line-height: 1.7;
   text-align: center;
-  padding: 1.5rem 0.5rem;
   margin: 0;
+  padding: 20px 8px;
 }
 
 /* ── Modal ───────────────────────────────────────────────────────────────── */
 
 .ito-modal {
-  font-family: var(--ito-font-ui);
+  font-family: var(--ito-font-sans);
 }
 
 .ito-modal-title {
-  font-family: var(--ito-font-display);
-  font-size: 1.125rem;
+  font-family: var(--ito-font-serif);
+  font-size: 17px;
   font-weight: 400;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   color: var(--ito-on-surface);
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
 }
 
-/* ── Settings extras ─────────────────────────────────────────────────────── */
+.ito-modal .ito-tiles {
+  padding: 0;
+}
+
+/* ── Settings ────────────────────────────────────────────────────────────── */
 
 .ito-settings-section {
-  font-family: var(--ito-font-display);
-  font-size: 0.875rem;
+  font-family: var(--ito-font-serif);
+  font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ito-on-surface-muted);
-  border-bottom: none;
+  color: var(--ito-on-surface-3);
   margin-top: 2rem;
   padding-bottom: 0.5rem;
+  border-bottom: none;
 }
