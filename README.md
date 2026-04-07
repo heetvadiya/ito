@@ -26,8 +26,6 @@ Ito's job is only to *resurface*. To bring back the forgotten thread. To place a
 
 The model finds candidates. You confirm connections.
 
-Your intentional `[[wikilinks]]` are solid lines. Ito's suggestions are dotted lines. These are different things, and the system treats them differently.
-
 ---
 
 ## What Ito Does Not Do
