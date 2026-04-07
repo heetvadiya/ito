@@ -77,6 +77,18 @@ Progress and any errors surface as Obsidian notices. Nothing happens invisibly.
 ### Add Link
 One button in the panel adds `[[filename]]` to a `## Related` section at the bottom of your active note. That is the only moment Ito writes anything to a vault file — and only when you ask it to.
 
+### Vault Graph Export
+Ito automatically maintains a `vault-graph.json` file in your vault root. It contains every note's title, links, backlinks, tags, and a content summary — the same data Obsidian uses to render the graph view, exported as clean JSON.
+
+The file refreshes automatically whenever:
+- Obsidian opens
+- Any note's links change
+- A file finishes indexing
+
+You can also trigger it manually: *Ito: Export vault graph* in the command palette.
+
+This file is the bridge to **[ito-cli](https://github.com/heetvadiya/ito-cli)** — a companion command-line tool that lets you (or any AI) navigate your vault without opening Obsidian.
+
 ---
 
 ## Setup
