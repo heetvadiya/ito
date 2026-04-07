@@ -1,6 +1,6 @@
 {
   "name": "obsidian-ito",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "description": "Multimodal semantic search for Obsidian",
   "main": "main.js",
   "scripts": {
