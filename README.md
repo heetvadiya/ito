@@ -14,15 +14,19 @@ It uses Google's Gemini multimodal embedding model to map every file in your vau
 
 ## The Ideology
 
-**Ito does not decide. You do.**
+**Your knowledge base should only contain what you actually know.**
 
-Most AI tools for knowledge management delegate the act of connection to a language model. The model summarises your notes, generates links, writes your thinking for you. The connections it makes are not yours — they are the model's best guess at what you probably meant.
+There is a growing category of AI tools that write into your knowledge base for you. They summarise articles, generate notes, compile wikis, synthesise connections. The result is a vault full of text — but whose understanding does it represent?
 
-We believe this is the wrong direction.
+The more an AI writes into your knowledge base, the more it pollutes it. You end up with a collection of LLM outputs that *look* like knowledge but carry none of the cognitive weight of having actually learned something. You cannot teach it. You cannot defend it. You do not know where half of it came from. That is not a knowledge base. That is a cache of hallucinations dressed up as your understanding.
 
-The value of a personal knowledge base is not in the storage of information. It is in the *moment of recognition* — when you see two ideas next to each other and something clicks. That moment belongs to the human, not the model.
+**Real knowledge requires the effort of formation.** Writing a note forces comprehension. You cannot write clearly about something you do not understand. The friction is not a bug — it is how knowledge becomes yours.
 
-Ito's job is only to *resurface*. To bring back the forgotten thread. To place a voice memo you recorded six months ago next to the note you are writing today, and let you decide whether the connection is real.
+Ito's position is the opposite of that trend.
+
+Every note Ito surfaces was written by you. Every connection it suggests is between your words and your ideas. The moment of recognition when two of your own notes belong together is real learning — because you already understood both things. Ito just reminded you they were connected.
+
+Ito does not write. It does not summarise. It does not generate. It resurfaces.
 
 The model finds candidates. You confirm connections.
 
