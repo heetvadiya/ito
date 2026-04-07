@@ -27,6 +27,46 @@ Ito's job is only to *resurface*. To bring back the forgotten thread. To place a
 The model finds candidates. You confirm connections.
 
 ---
+
+## Ito as a Knowledge Base & Retrieval Tool
+
+Ito is not just a sidebar panel. It is the foundation of a two-part system for navigating your vault from anywhere — including inside an AI conversation.
+
+### The setup
+
+**1. Ito plugin** (this) — indexes your vault, keeps a live `vault-graph.json` in your vault root  
+**2. [ito-cli](https://github.com/heetvadiya/ito-cli)** — reads that file from any terminal
+
+```bash
+# Install the CLI
+curl -O https://raw.githubusercontent.com/heetvadiya/ito-cli/main/ito.py
+
+# Set your vault once
+python3 ito.py --config-vault ~/obsidian/MyVault
+
+# Add alias so it works everywhere
+echo 'alias ito="python3 /path/to/ito.py"' >> ~/.bashrc
+source ~/.bashrc
+
+# Search your vault from anywhere
+ito "developer experience"
+ito "what do I know about embeddings"
+```
+
+### Use with Claude or any AI
+
+Add this to your Claude system prompt or `CLAUDE.md` in any project:
+
+```
+When asked "what do I know about X" or "find my notes on X",
+run: python3 /path/to/ito.py "X"
+Answer from the output.
+```
+
+Now asking *"what do I know about knowledge management?"* makes Claude search your actual vault and answer from your own notes — not its training data.
+
+---
+
 Dark mode:
 <img width="1576" height="959" alt="image" src="https://github.com/user-attachments/assets/05e19d26-a0e5-49da-9c2d-2f1a103fc4ee" />
 Light mode:
